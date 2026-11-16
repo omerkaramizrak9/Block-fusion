@@ -17,22 +17,23 @@
 //   { type: 'product', productId: 'id' }     mağazadan satın alınınca (store/catalog.js)
 
 export const THEMES = [
-  // --- MAJOR BLOCK ana tasarımı (varsayılan): koyu bordo + lacivert, retro-fütüristik,
-  //     ince bakır/altın detaylar. Blok renkleri birbirinden ve arka plandan net ayrılır.
+  // --- MAJOR BLOCK ana tasarımı (varsayılan): yumuşak mürdüm + gece mavisi zemin,
+  //     ince bakır/altın detaylar, PASTEL ama belirgin bloklar. Açık pastel bloklar koyu
+  //     zeminde net seçilir ve gözü yormaz; tonlar birbirinden açıkça ayrılır.
   {
     id: 'major',
-    name: 'Major Premium',
+    name: 'Major Pastel',
     unlock: { type: 'free' },
     colors: {
-      bg1: '#2b0d1d', bg2: '#080d22', glow1: '#5c1532', glow2: '#142257',
-      panel: '#0f1530', panel2: '#161d3d',
-      cellEmpty: '#1a2142', cellEdge: '#2c3560',
-      text: '#f4ede4', textDim: '#a89fb6', accent: '#e8b765'
+      bg1: '#3a1c3d', bg2: '#161b38', glow1: '#6b2d5e', glow2: '#2b3b7c',
+      panel: '#1f2448', panel2: '#2a3060',
+      cellEmpty: '#2b3160', cellEdge: '#3c4378',
+      text: '#fbf7ff', textDim: '#bcb5da', accent: '#ffd27a'
     },
-    // turkuaz, fuşya, turuncu, yeşil, mor, altın sarısı, mavi, mercan kırmızısı
-    palette: ['#1fc2bc', '#e2448f', '#ff7a29', '#4cc25a', '#9160e3', '#f2c335', '#3b8ff0', '#ef4f4a'],
-    fx: ['#6ff6ef', '#ff7cbd', '#ffb466', '#ffe08a'],
-    metal: { copper: '#c47a48', gold: '#e8b765', dark: '#5e321d' }
+    // nane, pembe, şeftali, fıstık yeşili, lavanta, tereyağı sarısı, gök mavisi, mercan
+    palette: ['#5fe0c8', '#ff8fc3', '#ffad75', '#a3e27c', '#b9a0ff', '#ffdc72', '#82c6ff', '#ff8b85'],
+    fx: ['#b4fff2', '#ffd0e6', '#ffdcb8', '#fff3b8'],
+    metal: { copper: '#e0a07a', gold: '#f5d38c', dark: '#7a4a35' }
   },
   // --- Macera Dünya 1 (Bölüm 1–20) — varsayılan
   {

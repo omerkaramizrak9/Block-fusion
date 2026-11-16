@@ -38,14 +38,22 @@ export class Layout {
     const byHeight = (vh - padY - hud - rotateBar - boardPad - trayExtra - gaps) / (n + 2.5);
     const pitch = Math.max(26, Math.floor(Math.min(byWidth, byHeight, 64)));
 
+    // Alttaki parçalar: tahtadan sonra kalan dikey boşluğu kullanarak büyür
+    // (en fazla tahta hücresinin %70'i, en büyük 5'li parça yuvaya sığacak kadar).
     const slotWidth = (pitch * n + boardPad) / CONFIG.traySize;
-    const trayPitch = Math.floor(Math.min(pitch * 0.5, slotWidth / 5.6));
+    const leftover = vh - padY - hud - rotateBar - (pitch * n + boardPad) - gaps;
+    const trayH = Math.round(Math.max(pitch * 2.4, Math.min(leftover, pitch * 3.6)));
+    // Parça başına ölçek: kısa parçalar büyük, uzun (5'li) parçalar yuvaya sığacak kadar
+    // küçülür → Renderer.trayPitchFor(). Burada yalnızca üst sınır belirlenir.
+    const trayPitch = Math.floor(Math.min(pitch * 0.62, (trayH - 16) / 3));
+    root.setProperty('--tray-h', `${trayH}px`);
+    root.setProperty('--slot-w', `${Math.floor(slotWidth)}px`);
 
     this.pitch = pitch;
     root.setProperty('--pitch', `${pitch}px`);
     root.setProperty('--board', `${pitch * n}px`);
     root.setProperty('--tray-pitch', `${trayPitch}px`);
     root.setProperty('--gap', `${Math.max(2, Math.round(pitch * 0.08))}px`);
-    root.setProperty('--radius', `${Math.max(4, Math.round(pitch * 0.18))}px`);
+    root.setProperty('--radius', `${Math.max(4, Math.round(pitch * 0.2))}px`);
   }
 }

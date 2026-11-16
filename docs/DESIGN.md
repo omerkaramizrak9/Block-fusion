@@ -1,6 +1,7 @@
 # MAJOR BLOCK – Görsel Tasarım Sistemi
 
-Seçilen yön: **koyu bordo + lacivert, retro-fütüristik, ince bakır/altın metal detaylı premium tasarım.**
+Seçilen yön: **yumuşak mürdüm + gece mavisi zemin, retro-fütüristik, ince bakır/altın detaylar,
+PASTEL ama belirgin bloklar** (açık pastel bloklar koyu zeminde net seçilir, gözü yormaz).
 
 ## Katmanlar
 | Dosya | Görev |
@@ -22,16 +23,19 @@ tipografi ve blok yüzeyi aynı kalır, yalnızca renkler değişir.
 ## Kurallar
 - **Bloklar asla gömülmez:** boş hücreler içe gömük (iç gölge), bloklar dışa çıkık
   (koyu dış hat + üst kenar ışığı + gölge). Her blok rengi boş hücreye göre ≥ 3:1 kontrast
-  (Major Premium'da en düşük 3,7:1), tonlar arası ≥ 20°.
+  (Major Pastel'de en düşük 5,4:1), tonlar arası ≥ 20°.
 - **Kontrollü parlaklık:** mat, hafif dokulu yüzey; sürekli neon/parlama yok. Güçlü efektler
   yalnızca büyük kombolarda (`docs/EFFECTS.md`).
 - **Tipografi:** Chakra Petch (OFL, `www/assets/fonts/`, internetsiz çalışır, Türkçe karakterli)
   skor, başlık, düğme ve etiketlerde; açıklama metinlerinde sistem fontu.
 - **Dokunma alanı:** etkileşimli düğmeler en az 44 px.
 
-## Major Premium blok renkleri
-turkuaz `#1fc2bc` · fuşya `#e2448f` · turuncu `#ff7a29` · yeşil `#4cc25a` ·
-mor `#9160e3` · altın sarısı `#f2c335` · mavi `#3b8ff0` · mercan `#ef4f4a`
+## Major Pastel blok renkleri
+nane `#5fe0c8` · pembe `#ff8fc3` · şeftali `#ffad75` · fıstık yeşili `#a3e27c` ·
+lavanta `#b9a0ff` · tereyağı sarısı `#ffdc72` · gök mavisi `#82c6ff` · mercan `#ff8b85`
+
+Blok yüzeyi: üst ışık kenarı + yumuşak iç parlaklık + alt pah + ince koyu dış hat (sabit, yanıp sönmez).
+Tepsi parçaları kalan boşluğa göre büyür; uzun parçalar yuvaya sığacak kadar küçülür.
 
 ## Canlı sunucu karakteri (yer ayrıldı, içerik yok)
 HUD'un solunda 58 px dairesel, metal çerçeveli yuva (`#presenter`, `www/js/ui/PresenterSlot.js`).

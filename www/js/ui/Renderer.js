@@ -116,7 +116,7 @@ export class Renderer {
       const key = `${piece.id}:${piece.shape.id}`; // döndürülünce şekil değişir
       if (slot.dataset.pieceId !== key) {
         slot.innerHTML = '';
-        const el = buildPieceEl(piece, 'piece', 'var(--tray-pitch)');
+        const el = buildPieceEl(piece, 'piece', trayPitchFor(piece));
         if (this.rotatedSlots.has(i)) el.classList.add('rot-anim');
         slot.appendChild(el);
         slot.dataset.pieceId = key;
@@ -225,6 +225,12 @@ export class Renderer {
   }
 
   hideGameOver() { this.els.gameover.classList.add('hidden'); }
+}
+
+/** Tepsideki parçanın hücre boyutu: üst sınır --tray-pitch; uzun parçalar yuvaya sığar. */
+export function trayPitchFor(piece) {
+  const { rows, cols } = piece.shape;
+  return `min(var(--tray-pitch), calc((var(--slot-w) - 14px) / ${cols}), calc((var(--tray-h) - 18px) / ${rows}))`;
 }
 
 /** Palet indeksini temanın CSS değişkenine çevirir: 3 -> var(--p3) */

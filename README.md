@@ -29,8 +29,8 @@ Capacitor ile paketlenmiş Google Play / App Store uygulaması olarak çalışı
   - Oyun başına en fazla 3 ödüllü reklam (+5 hak); zorunlu reklam yok
   - Ayrıntılar ve gelir planı: [docs/MONETIZATION.md](docs/MONETIZATION.md)
 - **Görsel tasarım:** koyu bordo + lacivert sinematik arka plan, retro-fütüristik çizgiler,
-  ince bakır/altın çerçeveler, mat ve hafif dokulu, birbirinden net ayrılan bloklar
-  (*Major Premium*, varsayılan). Ayrıntılar: [docs/DESIGN.md](docs/DESIGN.md)
+  ince bakır/altın çerçeveler, pastel ama belirgin, hacimli ve birbirinden net ayrılan bloklar
+  (*Major Pastel*, varsayılan: pastel ama belirgin, göz yormayan). Ayrıntılar: [docs/DESIGN.md](docs/DESIGN.md)
 - **Paletler:** Macera: Bölüm 1–20 *Soft Ocean*, 21–40 *Velvet Night*, 41–60 *Forest Mist*
   (her 20 bölümde değişir). Sonsuz Mod'da açılan temalar Ayarlar'dan seçilir
 - **Sunucu karakteri:** HUD'da küçük bir yuva ayrıldı; animasyonlar sonraki aşamada

@@ -42,14 +42,14 @@
 
 /* ---------- Varsayılan değişkenler = 'major' teması (JS yüklenmeden önce de doğru görünür) ---------- */
 :root {
-  --bg-1: #2b0d1d; --bg-2: #080d22; --bg-glow-1: #5c1532; --bg-glow-2: #142257;
-  --panel: #0f1530; --panel-2: #161d3d;
-  --cell-empty: #1a2142; --cell-empty-edge: #2c3560;
-  --text: #f4ede4; --text-dim: #a89fb6; --accent: #e8b765;
-  --p0: #1fc2bc; --p1: #e2448f; --p2: #ff7a29; --p3: #4cc25a;
-  --p4: #9160e3; --p5: #f2c335; --p6: #3b8ff0; --p7: #ef4f4a;
-  --fx0: #6ff6ef; --fx1: #ff7cbd; --fx2: #ffb466; --fx3: #ffe08a;
-  --metal-copper: #c47a48; --metal-gold: #e8b765; --metal-dark: #5e321d;
+  --bg-1: #3a1c3d; --bg-2: #161b38; --bg-glow-1: #6b2d5e; --bg-glow-2: #2b3b7c;
+  --panel: #1f2448; --panel-2: #2a3060;
+  --cell-empty: #2b3160; --cell-empty-edge: #3c4378;
+  --text: #fbf7ff; --text-dim: #bcb5da; --accent: #ffd27a;
+  --p0: #5fe0c8; --p1: #ff8fc3; --p2: #ffad75; --p3: #a3e27c;
+  --p4: #b9a0ff; --p5: #ffdc72; --p6: #82c6ff; --p7: #ff8b85;
+  --fx0: #b4fff2; --fx1: #ffd0e6; --fx2: #ffdcb8; --fx3: #fff3b8;
+  --metal-copper: #e0a07a; --metal-gold: #f5d38c; --metal-dark: #7a4a35;
 
   --font-display: 'Chakra Petch', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   /* Metal çerçeve (ince, kontrollü parlaklık) */
@@ -279,3 +279,40 @@ body::before {
 .text-btn { min-height: 44px; }
 /* Bildirim, daha uzun HUD'un (skor/rekor/kombo) altında çıkar */
 .toast { top: calc(max(10px, env(safe-area-inset-top)) + 112px); }
+
+/* ==========================================================
+   Pastel ama belirgin görünüm (v2)
+   ========================================================== */
+/* Tahta paneli: hafif iç ışık, zeminden ayrışır */
+.board {
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255,255,255,.06), transparent 60%) padding-box,
+    linear-gradient(180deg, var(--panel-2), var(--panel)) padding-box,
+    var(--metal-edge) border-box;
+}
+/* Boş hücre: okunaklı, hafif içe gömük, yumuşak kenar */
+.cell::after {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cell-empty) 85%, #000) , var(--cell-empty));
+  box-shadow: inset 0 0 0 1px var(--cell-empty-edge), inset 0 2px 4px rgba(0,0,0,.28);
+}
+@supports not (background: color-mix(in srgb, red, blue)) {
+  .cell::after { background: var(--cell-empty); }
+}
+/* Dolu blok: pastel şeker hacmi — üst ışık kenarı, yumuşak iç parlaklık, alt pah,
+   koyu ince dış hat ve gölge. Parlaklık sabit; yanıp sönme yok. */
+.cell.filled::after,
+.block {
+  background-image:
+    radial-gradient(120% 70% at 28% 8%, rgba(255,255,255,.45), rgba(255,255,255,0) 55%),
+    linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 50%, rgba(40,20,60,.16) 100%),
+    var(--noise);
+  box-shadow:
+    inset 0 0 0 1px rgba(30, 18, 50, .28),
+    inset 0 2px 0 rgba(255,255,255,.65),
+    inset 0 -4px 0 rgba(40, 20, 60, .26),
+    0 3px 5px rgba(8, 6, 25, .45);
+}
+.cell.preview::after { box-shadow: inset 0 0 0 2px rgba(255,255,255,.75); }
+
+/* Tepsi: kalan boşluğu kullanır (Layout --tray-h) */
+.tray { height: var(--tray-h, calc(var(--tray-pitch) * 5 + 24px)); }
