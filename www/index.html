@@ -41,6 +41,17 @@
       </div>
     </main>
 
+    <div id="rotate-bar" class="rotate-bar">
+      <div class="rot-count" aria-label="Döndürme hakkı">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
+        <span id="rot-count">5</span>
+      </div>
+      <span id="rot-hint" class="rot-hint">Döndürmek için parçaya dokun</span>
+      <button id="rot-ad-btn" class="rot-ad-btn hidden" aria-label="Reklam izleyerek döndürme hakkı kazan">
+        <span class="play">▶</span> <span id="rot-ad-label">+5 hak</span>
+      </button>
+    </div>
+
     <footer id="tray" class="tray" aria-label="Blok parçaları"></footer>
   </div>
 
@@ -67,6 +78,21 @@
       </div>
     </div>
   </div>
+
+  <div id="reward" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="reward-title">
+    <div class="overlay-card">
+      <div class="reward-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="40" height="40"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
+      </div>
+      <h2 id="reward-title">Döndürme hakkın bitti</h2>
+      <p id="reward-text" class="reward-text"></p>
+      <p id="reward-error" class="reward-error hidden" role="alert"></p>
+      <button id="reward-watch" class="primary-btn">▶ Reklam İzle</button>
+      <button id="reward-skip" class="text-btn">Hayır, teşekkürler</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
 
   <noscript>Bu oyun JavaScript gerektirir.</noscript>
   <script type="module" src="js/main.js"></script>

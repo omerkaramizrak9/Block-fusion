@@ -22,6 +22,31 @@ export const CONFIG = {
 
   vibration: true,
 
+  // Parça döndürme (tepsideki parçaya dokununca 90° saat yönünde döner)
+  rotation: {
+    startingRights: 5,     // oyun başındaki ücretsiz hak
+    costPerTurn: 1,        // her 90° döndürmenin bedeli
+    resetEachGame: true,   // true: her yeni oyunda haklar baştan başlar
+    tapMaxMovePx: 10       // bundan az kayan dokunuş "döndürme" sayılır, fazlası sürükleme
+  },
+
+  // Ödüllü reklam ödülleri
+  rewards: {
+    rotationAdAmount: 5,   // reklam başına kazanılan döndürme hakkı
+    maxAdsPerGame: 0       // 0 = sınırsız
+  },
+
+  // Reklam altyapısı. provider: 'simulated' (test) | 'admob' (sonraki aşama)
+  ads: {
+    provider: 'simulated',
+    loadTimeoutMs: 8000,
+    simulated: {
+      loadDelayMs: 500,    // sahte yükleme süresi
+      durationSec: 5,      // sahte reklam uzunluğu
+      failRate: 0          // 0..1 arası: yükleme hatası olasılığı (test için)
+    }
+  },
+
   storageKeys: {
     bestEndless: 'blockfusion.best.endless',
     saveEndless: 'blockfusion.save.endless'

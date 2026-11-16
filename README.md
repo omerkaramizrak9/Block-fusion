@@ -17,6 +17,11 @@ Capacitor ile paketlenmiş Google Play / App Store uygulaması olarak çalışı
 - Sığmayan parçalar soluk görünür; hiçbir parça sığmazsa oyun biter
 - En iyi skor ve **yarım kalan oyun** saklanır (uygulama kapansa da kaldığı yerden devam)
 - Dokunsal geri bildirim (Android titreşim; uygulamada iOS Haptics)
+- **Parça döndürme:** tepsideki parçaya **dokun** → 90° döner (sürükle → yerleştir)
+  - Her oyunda 5 ücretsiz hak, her döndürme 1 hak; kare/tek blok dönmez ve hak harcatmaz
+  - Hak bitince isteğe bağlı **ödüllü reklam** ile +5 hak (şu an test/simülasyon reklamı)
+  - Döndürünce sığacak parçalar ↻ işaretiyle gösterilir
+  - Ayrıntılar ve gelir planı: [docs/MONETIZATION.md](docs/MONETIZATION.md)
 
 ## Proje yapısı
 
@@ -31,10 +36,12 @@ www/                       ← ORTAK OYUN KODU (web + Android + iOS)
     config.js              ayarlar, renkler, parça şekilleri
     storage.js             kalıcı kayıt (localStorage + yerel Preferences)
     platform/Platform.js   ★ Android / iOS / web farkları yalnızca burada
-    core/                  oyun mantığı (DOM'suz): Board, Pieces, Score, Game, EventBus
+    core/                  oyun mantığı (DOM'suz): Board, Pieces, Rotation, Score, Game, EventBus
     modes/EndlessMode.js   Sonsuz Mod kuralları
     powerups/PowerUps.js   Bomba / Yıldırım / Gökkuşağı (mantık hazır, arayüze bağlı değil)
-    ui/                    Renderer, DragController, Layout
+    monetization/ads/      ödüllü reklam servisi (simülasyon + AdMob iskeleti)
+    monetization/store/    uygulama içi satın alma kataloğu ve servis iskeleti
+    ui/                    Renderer, DragController, Layout, RotationUI
 android/                   Capacitor Android projesi (Android Studio ile açılır)
 ios/                       Capacitor iOS projesi (Xcode ile açılır)
 assets/                    uygulama simgesi ve açılış ekranı kaynak görselleri

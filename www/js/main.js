@@ -10,6 +10,9 @@ import { EndlessMode } from './modes/EndlessMode.js';
 import { Renderer } from './ui/Renderer.js';
 import { DragController } from './ui/DragController.js';
 import { Layout } from './ui/Layout.js';
+import { RotationUI } from './ui/RotationUI.js';
+import { AdService } from './monetization/ads/AdService.js';
+import { createAdProvider } from './monetization/ads/createAdProvider.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -50,7 +53,19 @@ async function boot() {
     goScore: $('go-score'),
     goBest: $('go-best'),
     goNewBest: $('go-newbest'),
-    confirm: $('confirm')
+    confirm: $('confirm'),
+    rotCountWrap: document.querySelector('.rot-count'),
+    rotCount: $('rot-count'),
+    rotHint: $('rot-hint'),
+    rotAdBtn: $('rot-ad-btn'),
+    rotAdLabel: $('rot-ad-label'),
+    reward: $('reward'),
+    rewardTitle: $('reward-title'),
+    rewardText: $('reward-text'),
+    rewardError: $('reward-error'),
+    rewardWatch: $('reward-watch'),
+    rewardSkip: $('reward-skip'),
+    toast: $('toast')
   };
 
   const bus = new EventBus();
@@ -58,7 +73,16 @@ async function boot() {
   // İleride: mod seçim ekranından new AdventureMode(level) verilebilir.
   const game = new Game({ mode: new EndlessMode(), bus });
   const renderer = new Renderer({ bus, game, els });
-  const drag = new DragController({ game, renderer, els, layout });
+
+  // Reklam altyapısı: başlatma hatası oyunu etkilemez (reklamsız devam edilir)
+  const ads = new AdService({ provider: createAdProvider(Platform), bus });
+  await ads.init();
+
+  const rotationUI = new RotationUI({ game, bus, ads, els });
+  const drag = new DragController({
+    game, renderer, els, layout,
+    onTap: (slot) => rotationUI.requestRotate(slot)
+  });
 
   const closeConfirm = () => els.confirm.classList.add('hidden');
   $('restart-btn').addEventListener('click', () => {
@@ -74,6 +98,8 @@ async function boot() {
 
   // Android geri tuşu: açık pencereyi kapat, yoksa uygulamayı arka plana al
   Platform.onBackButton(() => {
+    if (ads.showing) return true; // reklam açıkken geri tuşu yok sayılır
+    if (rotationUI.isOpen) { rotationUI.skip(); return true; }
     if (!els.confirm.classList.contains('hidden')) { closeConfirm(); return true; }
     return false;
   });
@@ -82,7 +108,7 @@ async function boot() {
   Platform.hideSplash();
 
   // Hata ayıklama/test için konsoldan erişim
-  window.blockFusion = { game, bus, Platform };
+  window.blockFusion = { game, bus, Platform, ads, rotationUI };
 }
 
 boot();

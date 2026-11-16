@@ -1,5 +1,6 @@
 // Rastgele parça üretimi.
 import { SHAPES, SHAPES_BY_ID, COLORS } from '../config.js';
+import { makeShape } from './Rotation.js';
 
 let nextId = 1;
 
@@ -38,11 +39,16 @@ export function generateTray(board, { count = 3, attempts = 10, rng = Math.rando
 
 /** Kayıt için sade veri: { s: şekil id, c: renk } */
 export function pieceToData(piece) {
-  return piece ? { s: piece.shape.id, c: piece.color } : null;
+  if (!piece) return null;
+  const d = { s: piece.shape.id, c: piece.color };
+  if (piece.shape.custom) d.cells = piece.shape.cells; // listede olmayan döndürülmüş şekil
+  return d;
 }
 
 export function pieceFromData(data) {
   if (!data) return null;
-  const shape = SHAPES_BY_ID.get(data.s);
+  const shape = Array.isArray(data.cells) && data.cells.length
+    ? makeShape(data.cells)
+    : SHAPES_BY_ID.get(data.s);
   return shape ? createPiece(shape, data.c) : null;
 }

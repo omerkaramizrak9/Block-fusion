@@ -8,12 +8,20 @@
 //   'score'    { value, best, combo, delta }
 //   'gameover' { score, best, isNewBest }
 //   'powerup'  { id, row, col, cleared }
+//   'rotations'      { count, delta, source }   döndürme hakkı değişti
+//   'rotated'        { slot, piece }            parça döndürüldü
+//   'rotate-denied'  { slot, reason }           'no-rights' | 'symmetric' | 'state'
+//   'stuck'          { }                        hamle yok ama döndürme kurtarabilir;
+//                                               arayüz ödüllü reklam teklif eder,
+//                                               sonra addRotations() ya da declineRescue()
+//   'unstuck'        { }
 
 import { CONFIG } from '../config.js';
 import { Board } from './Board.js';
 import { Score } from './Score.js';
 import { PowerUps } from '../powerups/PowerUps.js';
 import { pieceToData, pieceFromData } from './Pieces.js';
+import { rotateCW, isRotationSymmetric, otherOrientations } from './Rotation.js';
 import { storage } from '../storage.js';
 
 const SAVE_VERSION = 1;
@@ -25,7 +33,9 @@ export class Game {
     this.board = new Board(CONFIG.boardSize);
     this.score = new Score({ bestKey: mode.bestKey });
     this.tray = [];
-    this.state = 'idle'; // 'playing' | 'over'
+    this.state = 'idle'; // 'playing' | 'stuck' | 'over'
+    this.rotations = CONFIG.rotation.startingRights;
+    this.adsWatched = 0; // bu oyunda izlenen ödüllü reklam
   }
 
   /** Kayıtlı yarım oyun varsa onu yükler, yoksa yeni oyun başlatır. */
@@ -39,11 +49,16 @@ export class Game {
     this.score.reset();
     this.startBest = this.score.best;
     this.state = 'playing';
+    this.adsWatched = 0;
+    if (CONFIG.rotation.resetEachGame || this.rotations === undefined) {
+      this.rotations = CONFIG.rotation.startingRights;
+    }
     this.mode.setup(this);
     this.tray = this.mode.createTray(this);
     this.bus.emit('start', { board: this.board, tray: this.tray, score: this.score });
     this.bus.emit('tray', { tray: this.tray, fresh: true });
     this._emitScore(0);
+    this._emitRotations(0, 'start');
     this.save();
   }
 
@@ -57,12 +72,14 @@ export class Game {
       score: this.score.value,
       combo: this.score.combo,
       movesSinceClear: this.score.movesSinceClear,
-      startBest: this.startBest
+      startBest: this.startBest,
+      rotations: this.rotations,
+      adsWatched: this.adsWatched
     };
   }
 
   save() {
-    if (!this.mode.saveKey || this.state !== 'playing') return;
+    if (!this.mode.saveKey || (this.state !== 'playing' && this.state !== 'stuck')) return;
     storage.set(this.mode.saveKey, this.serialize());
   }
 
@@ -88,14 +105,80 @@ export class Game {
     this.score.combo = data.combo | 0;
     this.score.movesSinceClear = data.movesSinceClear | 0;
     this.startBest = data.startBest ?? this.score.best;
+    this.rotations = Number.isFinite(data.rotations) ? Math.max(0, data.rotations) : CONFIG.rotation.startingRights;
+    this.adsWatched = data.adsWatched | 0;
     this.tray = tray.every((p) => p === null) ? this.mode.createTray(this) : tray;
     this.state = 'playing';
 
     this.bus.emit('start', { board: this.board, tray: this.tray, score: this.score, resumed: true });
     this.bus.emit('tray', { tray: this.tray, fresh: true });
     this._emitScore(0);
+    this._emitRotations(0, 'resume');
     this._checkGameOver();
     return true;
+  }
+
+  // ---------- Döndürme ----------
+  get rotationCost() { return CONFIG.rotation.costPerTurn; }
+
+  canRotate() { return this.rotations >= this.rotationCost; }
+
+  /** Tepsideki parçayı 90° saat yönünde döndürür, 1 hak tüketir. */
+  rotatePiece(slot) {
+    const piece = this.tray[slot];
+    const deny = (reason) => {
+      this.bus.emit('rotate-denied', { slot, reason });
+      return { ok: false, reason };
+    };
+    if (!piece) return { ok: false, reason: 'empty' };
+    if (this.state !== 'playing') return deny('state');
+    if (isRotationSymmetric(piece.shape)) return deny('symmetric'); // hak harcatma
+    if (!this.canRotate()) return deny('no-rights');
+
+    piece.shape = rotateCW(piece.shape);
+    this.rotations -= this.rotationCost;
+    this.bus.emit('rotated', { slot, piece });
+    this.bus.emit('tray', { tray: this.tray, fresh: false });
+    this._emitRotations(-this.rotationCost, 'rotate');
+    this._checkGameOver();
+    this.save();
+    return { ok: true };
+  }
+
+  /** Ödül, satın alma vb. kaynaklardan hak ekler. */
+  addRotations(amount, source = 'reward') {
+    if (!(amount > 0) || this.state === 'over') return;
+    this.rotations += amount;
+    this._emitRotations(amount, source);
+    if (this.state === 'stuck') {
+      this.state = 'playing';
+      this.bus.emit('unstuck', {});
+      this.bus.emit('tray', { tray: this.tray, fresh: false });
+      this._checkGameOver();
+    }
+    this.save();
+  }
+
+  /** Oyuncu kurtarma teklifini reddetti (veya reklam yok): oyun biter. */
+  declineRescue() {
+    if (this.state === 'stuck') this._endGame();
+  }
+
+  /** Parça (gerekirse mevcut haklarla döndürülerek) tahtaya sığar mı? */
+  pieceFits(piece, maxTurns = 0) {
+    if (this.board.hasRoomFor(piece.shape)) return true;
+    return otherOrientations(piece.shape)
+      .some(({ shape, turns }) => turns <= maxTurns && this.board.hasRoomFor(shape));
+  }
+
+  /** Döndürme hakkı sınırsız olsaydı oyun devam edebilir miydi? */
+  rotationWouldHelp() {
+    return this.tray.some((p) => p && this.pieceFits(p, 3));
+  }
+
+  /** Mevcut haklarla en fazla kaç kez döndürülebilir. */
+  get affordableTurns() {
+    return Math.min(3, Math.floor(this.rotations / this.rotationCost));
   }
 
   /** Parçanın bu konuma bırakılması geçerli mi ve hangi hatlar temizlenir? */
@@ -153,15 +236,28 @@ export class Game {
   }
 
   _checkGameOver() {
-    if (this.state === 'playing' && this.mode.isGameOver(this)) {
-      this.state = 'over';
-      this.clearSave();
-      this.bus.emit('gameover', {
-        score: this.score.value,
-        best: this.score.best,
-        isNewBest: this.score.value > this.startBest
-      });
+    if (this.state !== 'playing' || !this.mode.isGameOver(this)) return;
+    // Hak yetmiyor ama döndürme kurtarabilir: arayüze ödüllü reklam teklifi için fırsat ver
+    if (this.rotationWouldHelp()) {
+      this.state = 'stuck';
+      this.bus.emit('stuck', {});
+      return;
     }
+    this._endGame();
+  }
+
+  _endGame() {
+    this.state = 'over';
+    this.clearSave();
+    this.bus.emit('gameover', {
+      score: this.score.value,
+      best: this.score.best,
+      isNewBest: this.score.value > this.startBest
+    });
+  }
+
+  _emitRotations(delta, source) {
+    this.bus.emit('rotations', { count: this.rotations, delta, source });
   }
 
   _emitScore(delta) {

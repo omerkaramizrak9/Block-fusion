@@ -29,6 +29,7 @@ export class EndlessMode {
 
   isGameOver(game) {
     const remaining = game.tray.filter(Boolean);
-    return remaining.length > 0 && !remaining.some((p) => game.board.hasRoomFor(p.shape));
+    // Mevcut döndürme haklarıyla yerleştirilebilecek parça varsa oyun sürer
+    return remaining.length > 0 && !remaining.some((p) => game.pieceFits(p, game.affordableTurns));
   }
 }

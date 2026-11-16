@@ -1,14 +1,18 @@
-// Dokunmatik / fare sürükle-bırak. Pointer Events kullanır (Android Chrome destekler).
+// Dokunmatik / fare girişi (Pointer Events: Android Chrome + iOS Safari).
+//   - Dokun (parmak neredeyse kımıldamadan kalkar) -> onTap(slot): parçayı döndür
+//   - Sürükle (eşik aşılır)                          -> parçayı tahtaya yerleştir
 import { CONFIG } from '../config.js';
 import { buildPieceEl } from './Renderer.js';
 
 export class DragController {
-  constructor({ game, renderer, els, layout }) {
+  constructor({ game, renderer, els, layout, onTap }) {
     this.game = game;
     this.renderer = renderer;
     this.els = els;
     this.layout = layout;
+    this.onTap = onTap;
     this.drag = null;
+    this.pending = null; // basıldı ama henüz sürükleme başlamadı
 
     els.tray.addEventListener('pointerdown', (e) => this._onDown(e));
     window.addEventListener('pointermove', (e) => this._onMove(e), { passive: false });
@@ -17,13 +21,20 @@ export class DragController {
   }
 
   _onDown(e) {
-    if (this.drag || this.game.state !== 'playing') return;
+    if (this.drag || this.pending || this.game.state !== 'playing') return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     const slotEl = e.target.closest('.slot');
     if (!slotEl) return;
     const slot = Number(slotEl.dataset.slot);
-    const piece = this.game.tray[slot];
-    if (!piece) return;
+    if (!this.game.tray[slot]) return;
     e.preventDefault();
+    this.pending = { pointerId: e.pointerId, slot, slotEl, x0: e.clientX, y0: e.clientY };
+  }
+
+  _beginDrag(p, x, y) {
+    const { slot, slotEl } = p;
+    const piece = this.game.tray[slot];
+    if (!piece || this.game.state !== 'playing') return;
 
     const pitch = this.layout.pitch;
     const el = buildPieceEl(piece, 'drag-piece', `${pitch}px`);
@@ -32,8 +43,8 @@ export class DragController {
     const w = piece.shape.cols * pitch;
     const h = piece.shape.rows * pitch;
     this.drag = {
-      pointerId: e.pointerId, slot, piece, el, w, h,
-      x: e.clientX, y: e.clientY,
+      pointerId: p.pointerId, slot, piece, el, w, h,
+      x, y,
       row: null, col: null, res: null, raf: 0
     };
     this.renderer.setSlotDragging(slot, true);
@@ -51,6 +62,15 @@ export class DragController {
   }
 
   _onMove(e) {
+    const p = this.pending;
+    if (p && e.pointerId === p.pointerId) {
+      e.preventDefault();
+      if (Math.hypot(e.clientX - p.x0, e.clientY - p.y0) > CONFIG.rotation.tapMaxMovePx) {
+        this.pending = null;
+        this._beginDrag(p, e.clientX, e.clientY);
+      }
+      return;
+    }
     const d = this.drag;
     if (!d || e.pointerId !== d.pointerId) return;
     e.preventDefault();
@@ -91,6 +111,12 @@ export class DragController {
   }
 
   _onUp(e, cancelled = false) {
+    const p = this.pending;
+    if (p && e.pointerId === p.pointerId) {
+      this.pending = null;
+      if (!cancelled) this.onTap?.(p.slot);
+      return;
+    }
     const d = this.drag;
     if (!d || e.pointerId !== d.pointerId) return;
     cancelAnimationFrame(d.raf);
@@ -111,6 +137,7 @@ export class DragController {
 
   /** Sürüklemeyi iptal eder (ör. uygulama arka plana alındığında). */
   cancel() {
+    this.pending = null;
     const d = this.drag;
     if (!d) return;
     cancelAnimationFrame(d.raf);

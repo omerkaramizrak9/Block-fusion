@@ -19,6 +19,11 @@ export class Renderer {
 
     bus.on('start', () => { this.renderBoard(); this.hideGameOver(); this.displayScore = 0; });
     bus.on('tray', ({ tray, fresh }) => this.renderTray(tray, fresh));
+    this.rotatedSlots = new Set();
+    bus.on('rotated', ({ slot }) => { this.rotatedSlots.add(slot); Renderer.haptic('light'); });
+    bus.on('rotate-denied', ({ slot, reason }) => { if (reason === 'symmetric') this.wiggleSlot(slot); });
+    // Hak sayısı değişince "döndürünce sığar" ipuçları güncellenir
+    bus.on('rotations', () => this.renderTray(this.game.tray, false));
     bus.on('placed', (e) => this._onPlaced(e));
     bus.on('score', (e) => this._onScore(e));
     bus.on('gameover', (e) => this._onGameOver(e));
@@ -102,18 +107,25 @@ export class Renderer {
       slot.classList.remove('dragging');
       if (!piece) {
         slot.classList.add('empty');
-        slot.classList.remove('unplaceable', 'enter');
+        slot.classList.remove('unplaceable', 'needs-rotate', 'enter');
         slot.innerHTML = '';
         delete slot.dataset.pieceId;
         return;
       }
       slot.classList.remove('empty');
-      if (slot.dataset.pieceId !== String(piece.id)) {
+      const key = `${piece.id}:${piece.shape.id}`; // döndürülünce şekil değişir
+      if (slot.dataset.pieceId !== key) {
         slot.innerHTML = '';
-        slot.appendChild(buildPieceEl(piece, 'piece', 'var(--tray-pitch)'));
-        slot.dataset.pieceId = String(piece.id);
+        const el = buildPieceEl(piece, 'piece', 'var(--tray-pitch)');
+        if (this.rotatedSlots.has(i)) el.classList.add('rot-anim');
+        slot.appendChild(el);
+        slot.dataset.pieceId = key;
       }
-      slot.classList.toggle('unplaceable', !this.game.board.hasRoomFor(piece.shape));
+      this.rotatedSlots.delete(i);
+      const fitsNow = this.game.board.hasRoomFor(piece.shape);
+      const fitsRotated = !fitsNow && this.game.pieceFits(piece, this.game.affordableTurns);
+      slot.classList.toggle('unplaceable', !fitsNow && !fitsRotated);
+      slot.classList.toggle('needs-rotate', fitsRotated);
       if (fresh) {
         slot.classList.remove('enter');
         void slot.offsetWidth; // animasyonu yeniden tetikle
@@ -124,6 +136,15 @@ export class Renderer {
   }
 
   setSlotDragging(i, on) { this.slotEls[i]?.classList.toggle('dragging', on); }
+
+  wiggleSlot(i) {
+    const slot = this.slotEls[i];
+    if (!slot) return;
+    slot.classList.remove('wiggle');
+    void slot.offsetWidth;
+    slot.classList.add('wiggle');
+    setTimeout(() => slot.classList.remove('wiggle'), 320);
+  }
 
   // ---------- Olaylar ----------
   _onPlaced({ placed, cleared, lines, result, row, col, piece }) {
@@ -274,3 +295,4 @@ export function buildPieceEl(piece, className, pitch) {
 function haptic(kind) {
   if (CONFIG.vibration) Platform.haptic(kind);
 }
+Renderer.haptic = haptic;
