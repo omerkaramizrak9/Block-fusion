@@ -25,14 +25,15 @@ export const THEMES = [
     name: 'Major Pastel',
     unlock: { type: 'free' },
     colors: {
-      bg1: '#3a1c3d', bg2: '#161b38', glow1: '#6b2d5e', glow2: '#2b3b7c',
-      panel: '#1f2448', panel2: '#2a3060',
-      cellEmpty: '#2b3160', cellEdge: '#3c4378',
-      text: '#fbf7ff', textDim: '#bcb5da', accent: '#ffd27a'
+      bg1: '#2e1533', bg2: '#10132e', glow1: '#5a2552', glow2: '#23306a',
+      panel: '#181c3c', panel2: '#21264f',
+      cellEmpty: '#1f2448', cellEdge: '#30376a',
+      text: '#fbf7ff', textDim: '#b6afd6', accent: '#ffd27a'
     },
-    // nane, pembe, şeftali, fıstık yeşili, lavanta, tereyağı sarısı, gök mavisi, mercan
-    palette: ['#5fe0c8', '#ff8fc3', '#ffad75', '#a3e27c', '#b9a0ff', '#ffdc72', '#82c6ff', '#ff8b85'],
-    fx: ['#b4fff2', '#ffd0e6', '#ffdcb8', '#fff3b8'],
+    // Renk çemberine eşit yayılmış, açıklığı da farklı pastel tonlar (en yakın iki ton ≥26°):
+    // turkuaz, gül pembesi, kayısı, yeşil elma, menekşe, limon, gök mavisi, orkide
+    palette: ['#57e6e0', '#ff7f9f', '#ffa45c', '#8bee86', '#ae8bff', '#fff07a', '#6eb4ff', '#f48ff0'],
+    fx: ['#a9fff8', '#ffc4d6', '#fff6b8', '#d8c8ff'],
     metal: { copper: '#e0a07a', gold: '#f5d38c', dark: '#7a4a35' }
   },
   // --- Macera Dünya 1 (Bölüm 1–20) — varsayılan

@@ -42,13 +42,13 @@
 
 /* ---------- Varsayılan değişkenler = 'major' teması (JS yüklenmeden önce de doğru görünür) ---------- */
 :root {
-  --bg-1: #3a1c3d; --bg-2: #161b38; --bg-glow-1: #6b2d5e; --bg-glow-2: #2b3b7c;
-  --panel: #1f2448; --panel-2: #2a3060;
-  --cell-empty: #2b3160; --cell-empty-edge: #3c4378;
-  --text: #fbf7ff; --text-dim: #bcb5da; --accent: #ffd27a;
-  --p0: #5fe0c8; --p1: #ff8fc3; --p2: #ffad75; --p3: #a3e27c;
-  --p4: #b9a0ff; --p5: #ffdc72; --p6: #82c6ff; --p7: #ff8b85;
-  --fx0: #b4fff2; --fx1: #ffd0e6; --fx2: #ffdcb8; --fx3: #fff3b8;
+  --bg-1: #2e1533; --bg-2: #10132e; --bg-glow-1: #5a2552; --bg-glow-2: #23306a;
+  --panel: #181c3c; --panel-2: #21264f;
+  --cell-empty: #1f2448; --cell-empty-edge: #30376a;
+  --text: #fbf7ff; --text-dim: #b6afd6; --accent: #ffd27a;
+  --p0: #57e6e0; --p1: #ff7f9f; --p2: #ffa45c; --p3: #8bee86;
+  --p4: #ae8bff; --p5: #fff07a; --p6: #6eb4ff; --p7: #f48ff0;
+  --fx0: #a9fff8; --fx1: #ffc4d6; --fx2: #fff6b8; --fx3: #d8c8ff;
   --metal-copper: #e0a07a; --metal-gold: #f5d38c; --metal-dark: #7a4a35;
 
   --font-display: 'Chakra Petch', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -307,7 +307,7 @@ body::before {
     linear-gradient(180deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 50%, rgba(40,20,60,.16) 100%),
     var(--noise);
   box-shadow:
-    inset 0 0 0 1px rgba(30, 18, 50, .28),
+    inset 0 0 0 1px rgba(25, 14, 45, .40),
     inset 0 2px 0 rgba(255,255,255,.65),
     inset 0 -4px 0 rgba(40, 20, 60, .26),
     0 3px 5px rgba(8, 6, 25, .45);

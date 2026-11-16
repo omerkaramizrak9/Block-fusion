@@ -23,7 +23,7 @@ tipografi ve blok yüzeyi aynı kalır, yalnızca renkler değişir.
 ## Kurallar
 - **Bloklar asla gömülmez:** boş hücreler içe gömük (iç gölge), bloklar dışa çıkık
   (koyu dış hat + üst kenar ışığı + gölge). Her blok rengi boş hücreye göre ≥ 3:1 kontrast
-  (Major Pastel'de en düşük 5,4:1), tonlar arası ≥ 20°.
+  (Major Pastel'de en düşük 5,7:1), tonlar arası ≥ 25°.
 - **Kontrollü parlaklık:** mat, hafif dokulu yüzey; sürekli neon/parlama yok. Güçlü efektler
   yalnızca büyük kombolarda (`docs/EFFECTS.md`).
 - **Tipografi:** Chakra Petch (OFL, `www/assets/fonts/`, internetsiz çalışır, Türkçe karakterli)
@@ -31,8 +31,10 @@ tipografi ve blok yüzeyi aynı kalır, yalnızca renkler değişir.
 - **Dokunma alanı:** etkileşimli düğmeler en az 44 px.
 
 ## Major Pastel blok renkleri
-nane `#5fe0c8` · pembe `#ff8fc3` · şeftali `#ffad75` · fıstık yeşili `#a3e27c` ·
-lavanta `#b9a0ff` · tereyağı sarısı `#ffdc72` · gök mavisi `#82c6ff` · mercan `#ff8b85`
+Renk çemberine eşit yayılmış, açıklığı da farklı pastel tonlar (en yakın iki ton ≥ 26°):
+turkuaz `#57e6e0` · gül pembesi `#ff7f9f` · kayısı `#ffa45c` · yeşil elma `#8bee86` ·
+menekşe `#ae8bff` · limon `#fff07a` · gök mavisi `#6eb4ff` · orkide `#f48ff0`
+Boş hücreye kontrast 5,7:1 – 12,8:1.
 
 Blok yüzeyi: üst ışık kenarı + yumuşak iç parlaklık + alt pah + ince koyu dış hat (sabit, yanıp sönmez).
 Tepsi parçaları kalan boşluğa göre büyür; uzun parçalar yuvaya sığacak kadar küçülür.
