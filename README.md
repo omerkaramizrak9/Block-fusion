@@ -1,4 +1,9 @@
-# Block Fusion
+# MAJOR BLOCK
+
+> Oyunun görünen adı **MAJOR BLOCK**'tur (eski çalışma adı: Block Fusion).
+> GitHub deposu, uygulama kimliği (`com.blockfusion.game`) ve kayıt anahtarları
+> (`blockfusion.*`) bilerek eski adla bırakıldı: bunlar teknik kimliklerdir,
+> değiştirilirse oyuncu kayıtları ve mağaza bağlantıları bozulur.
 
 Android ve iPhone (iOS) için özgün blok bulmaca oyunu.
 **Tek kod tabanı:** HTML5 + CSS + JavaScript (`www/` klasörü).

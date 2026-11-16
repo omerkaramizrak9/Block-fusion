@@ -1,4 +1,4 @@
-# Block Fusion – Gelir Modeli ve Altyapı Planı
+# MAJOR BLOCK – Gelir Modeli ve Altyapı Planı
 
 ## 1. Şu an çalışan: Döndürme hakkı + ödüllü reklam (simülasyon)
 

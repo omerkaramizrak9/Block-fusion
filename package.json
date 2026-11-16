@@ -2,7 +2,7 @@
   "name": "block-fusion",
   "version": "0.2.0",
   "private": true,
-  "description": "Block Fusion – Android ve iOS için blok bulmaca oyunu (tek kod tabanı)",
+  "description": "MAJOR BLOCK – Android ve iOS için blok bulmaca oyunu (tek kod tabanı)",
   "scripts": {
     "serve": "npx --yes http-server www -p 8080 -c-1",
     "cap:add:android": "cap add android",

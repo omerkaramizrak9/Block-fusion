@@ -1,4 +1,4 @@
-# Block Fusion – Animasyon, Ses ve Titreşim
+# MAJOR BLOCK – Animasyon, Ses ve Titreşim
 
 ## İlkeler
 - Normal oynanış sakin, mat ve akıcı. Parlak (yine pastel) renkler yalnızca kutlamalarda.
