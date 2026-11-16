@@ -4,7 +4,9 @@
 
 | Kural | Uygulama |
 |---|---|
-| Başlangıçta 5 ücretsiz hak | `CONFIG.rotation.startingRights` (her yeni oyunda yenilenir: `resetEachGame`) |
+| Her yeni oyunda 5 ücretsiz hak | `CONFIG.rotation.startingRights`, `resetEachGame: true` |
+| Oyun başına en fazla 3 ödüllü reklam, her biri +5 hak | `CONFIG.rewards.maxAdsPerGame = 3`, `rotationAdAmount = 5` |
+| Zorunlu reklam yok | Yalnızca oyuncunun seçtiği ödüllü reklam |
 | Her 90° döndürme 1 hak | `CONFIG.rotation.costPerTurn`, `Game.rotatePiece()` |
 | Kare / tek blok dönmez | Bu parçalar hak harcatmaz (`isRotationSymmetric`) |
 | Hak bitince isteğe bağlı reklam teklifi | `ui/RotationUI.js` → "Reklam izle +5" / "Hayır, teşekkürler" |
@@ -51,28 +53,36 @@ Oyun kodu (core/) reklamdan habersizdir. Yalnızca `game.addRotations(n, kaynak)
 8. Mümkünse ödül doğrulaması: AdMob Server-Side Verification (SSV)
 9. Mağaza beyanları: Google Play "Ads" beyanı + Data Safety; App Store "Privacy Nutrition Label"
 
-## 4. Mağaza (uygulama içi satın alma) planı
+## 4. Mağaza (uygulama içi satın alma) planı — yalnızca kozmetik
+
+Karar: Başlangıç sürümünde **reklam kaldırma ürünü yok** (zorunlu reklam da yok).
+Satış odağı özel temalar ve kozmetik paketler.
 
 | Ürün | Tür | Etki |
 |---|---|---|
-| `remove_ads` | kalıcı | Zorunlu reklamları kaldırır (ödüllü reklamlar isteğe bağlı kalır) |
-| `theme_neon`, `theme_ocean` | kalıcı | Özel temalar |
-| `rotations_25` | tüketilebilir | 25 döndürme hakkı |
-| `powerpack_small` | tüketilebilir | Bomba / Yıldırım / Gökkuşağı |
-| `premium` | kalıcı | Reklamsız + tüm temalar + Macera bölümleri |
+| `theme_neon` | kalıcı | Neon Gece teması |
+| `theme_sakura` | kalıcı | Sakura teması |
+| `pack_cosmetic_1` | kalıcı | Tema(lar) + gelecekteki kozmetikler (ör. blok stili) |
 
-Uygulama önerisi: **RevenueCat** (Capacitor eklentisi; Google Play Billing + StoreKit'i
-tek API'de birleştirir, makbuz doğrulamasını yapar, belirli gelire kadar ücretsiz) veya
-`cordova-plugin-purchase`.
+Nasıl bağlı:
+- Temalar `www/js/theme/themes.js` içinde; mağaza teması `unlock: { type: 'product', productId }`
+- Satın alma → `Entitlements.grant('theme:<id>')` → tema Ayarlar'da otomatik açılır
+- Yeni kozmetik türü (blok stili, efekt paketi): `cosmetic:<id>` hakkı + ilgili görsel kod
+
+Uygulama önerisi: **RevenueCat** (Capacitor eklentisi; Google Play Billing + StoreKit tek
+API, makbuz doğrulaması) veya `cordova-plugin-purchase`.
 
 Zorunlu kurallar:
 - Dijital içerik **yalnızca** Google Play Billing / Apple IAP ile satılabilir
 - Kalıcı ürünler için **"Satın alımları geri yükle"** butonu (Apple şartı)
-- Hak, mağaza onayından **sonra** verilir; tüketilebilir ürünler "consume/finish" edilir
+- Hak, mağaza onayından **sonra** verilir
 - Fiyatlar koda yazılmaz, mağazadan yerel para birimiyle okunur
 
-## 5. Açık kararlar (sizin belirlemeniz gerekenler)
-- Döndürme hakları her oyunda mı yenilensin, yoksa oyuncunun kalıcı cüzdanı mı olsun?
-  (Şu an: her oyunda 5'ten başlar. Kalıcı cüzdan için hakların oyun kaydından ayrı saklanması gerekir; küçük bir ek iş.)
-- Oyun başına reklam sınırı (`rewards.maxAdsPerGame`, şu an sınırsız)
-- Zorunlu (geçiş) reklam olacak mı? Olacaksa `remove_ads` ürünü anlamlı hale gelir.
+## 5. Ücretsiz ilerleme ile açılan temalar
+| Tema | Koşul |
+|---|---|
+| Gece Mavisi | Varsayılan |
+| Orman | Sonsuz Mod en iyi skor 1500 |
+| Kor | En iyi skor 3000 |
+| Kutup Işığı | En iyi skor 6000 |
+| Çöl Akşamı / Derin Okyanus | Macera Modu Dünya 3 / Dünya 4 |

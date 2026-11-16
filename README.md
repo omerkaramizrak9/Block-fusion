@@ -21,7 +21,15 @@ Capacitor ile paketlenmiş Google Play / App Store uygulaması olarak çalışı
   - Her oyunda 5 ücretsiz hak, her döndürme 1 hak; kare/tek blok dönmez ve hak harcatmaz
   - Hak bitince isteğe bağlı **ödüllü reklam** ile +5 hak (şu an test/simülasyon reklamı)
   - Döndürünce sığacak parçalar ↻ işaretiyle gösterilir
+  - Oyun başına en fazla 3 ödüllü reklam (+5 hak); zorunlu reklam yok
   - Ayrıntılar ve gelir planı: [docs/MONETIZATION.md](docs/MONETIZATION.md)
+- **Temalar:** normal oyunda koyu, mat, göz yormayan renkler. Sonsuz Mod'da açılan
+  temalar Ayarlar'dan seçilir (skorla açılır; mağaza temaları ileride)
+- **Kombo kutlamaları:** büyük kombolarda kısa ekran sarsıntısı, renk dalgaları,
+  parçacık ve ödül yazısı (parlak renkler yalnızca burada)
+- **Ayarlar (⚙):** titreşim, yoğun görsel efektler, tema seçimi
+- **Macera Modu atmosferi:** her 20 bölümde yeni dünya, palet ve arka plan
+  (`theme/themes.js → atmosphereForLevel`); bölümler sonraki aşamada
 
 ## Proje yapısı
 
@@ -38,10 +46,13 @@ www/                       ← ORTAK OYUN KODU (web + Android + iOS)
     platform/Platform.js   ★ Android / iOS / web farkları yalnızca burada
     core/                  oyun mantığı (DOM'suz): Board, Pieces, Rotation, Score, Game, EventBus
     modes/EndlessMode.js   Sonsuz Mod kuralları
+    modes/AdventureMode.js Macera Modu iskeleti (dünya atmosferi hazır)
+    theme/                 temalar, Macera dünyaları, ThemeManager
+    settings/Settings.js   oyuncu ayarları
     powerups/PowerUps.js   Bomba / Yıldırım / Gökkuşağı (mantık hazır, arayüze bağlı değil)
     monetization/ads/      ödüllü reklam servisi (simülasyon + AdMob iskeleti)
     monetization/store/    uygulama içi satın alma kataloğu ve servis iskeleti
-    ui/                    Renderer, DragController, Layout, RotationUI
+    ui/                    Renderer, DragController, Layout, RotationUI, ComboFX, SettingsUI
 android/                   Capacitor Android projesi (Android Studio ile açılır)
 ios/                       Capacitor iOS projesi (Xcode ile açılır)
 assets/                    uygulama simgesi ve açılış ekranı kaynak görselleri
