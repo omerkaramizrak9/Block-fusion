@@ -139,7 +139,6 @@ body {
   background: linear-gradient(180deg, var(--panel-2), var(--panel));
   box-shadow: 0 18px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.07);
 }
-.board.shake { animation: shake .35s ease-in-out; }
 
 .board-grid {
   position: relative;
@@ -442,12 +441,6 @@ body {
   0% { opacity: 0; transform: translateY(30px) scale(.4); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-3px); }
-}
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes rot-in { from { transform: rotate(-90deg) scale(.85); } to { transform: none; } }
 @keyframes wiggle {
@@ -542,3 +535,106 @@ body {
   background: var(--accent); color: #2a1d05; font-size: 12px; font-weight: 900;
 }
 .theme-card[aria-checked="true"] .check { display: grid; }
+
+/* ---------- Büyük kombo kutlamaları (ComboFX) ---------- */
+#app.screen-shake { animation: screen-shake .32s ease-in-out; }
+#app.screen-shake-strong { animation: screen-shake-strong .42s ease-in-out; }
+
+.board { transition: box-shadow .4s; }
+.board.combo-glow {
+  box-shadow: 0 18px 40px rgba(0,0,0,.45), 0 0 0 2px var(--fx1), 0 0 28px var(--fx0);
+}
+
+/* Renk dalgası: temanın parlak efekt renkleriyle genişleyen halka */
+.fx-wave {
+  position: absolute;
+  width: calc(var(--pitch) * 2); height: calc(var(--pitch) * 2);
+  margin: calc(var(--pitch) * -1) 0 0 calc(var(--pitch) * -1);
+  border-radius: 50%;
+  background: conic-gradient(var(--fx0), var(--fx1), var(--fx2), var(--fx3), var(--fx0));
+  -webkit-mask: radial-gradient(circle, transparent 55%, #000 58%, #000 70%, transparent 73%);
+  mask: radial-gradient(circle, transparent 55%, #000 58%, #000 70%, transparent 73%);
+  opacity: 0;
+  animation: wave-out .75s ease-out forwards;
+  will-change: transform, opacity;
+}
+.cell.flash::after { animation: cell-flash .55s ease-out var(--fd, 0ms) both; }
+
+.fx-particle {
+  position: absolute;
+  width: calc(var(--pitch) * .28); height: calc(var(--pitch) * .28);
+  margin: calc(var(--pitch) * -.14) 0 0 calc(var(--pitch) * -.14);
+  border-radius: 3px;
+  background: var(--pc);
+  animation: particle .8s cubic-bezier(.15, .7, .35, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.fx-banner {
+  position: absolute; left: 50%; top: 38%;
+  transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center;
+  pointer-events: none; white-space: nowrap;
+  animation: banner-in 1.25s cubic-bezier(.2, 1.4, .4, 1) forwards;
+}
+.fx-banner b {
+  font-size: calc(var(--pitch) * .95); font-weight: 900; letter-spacing: .02em;
+  color: var(--fx1);
+  text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 0 18px var(--fx0);
+}
+.fx-banner.epic b {
+  font-size: calc(var(--pitch) * 1.15);
+  background: linear-gradient(90deg, var(--fx0), var(--fx1), var(--fx2), var(--fx3));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 3px 0 rgba(0,0,0,.45));
+}
+.fx-banner span { font-size: calc(var(--pitch) * .5); font-weight: 900; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.4); }
+/* Yoğun efektler kapalı: sakin, renkli parıltısız yazı */
+.fx-banner.calm { animation: calm-in 1.2s ease-out forwards; }
+.fx-banner.calm b, .fx-banner.calm.epic b {
+  color: var(--accent); background: none; text-shadow: 0 2px 0 rgba(0,0,0,.4); filter: none;
+  font-size: calc(var(--pitch) * .8);
+}
+
+@keyframes screen-shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-4px, 2px); }
+  40% { transform: translate(4px, -2px); }
+  60% { transform: translate(-3px, 1px); }
+  80% { transform: translate(2px, 0); }
+}
+@keyframes screen-shake-strong {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(-7px, 3px); }
+  30% { transform: translate(7px, -3px); }
+  45% { transform: translate(-5px, 2px); }
+  60% { transform: translate(5px, -1px); }
+  80% { transform: translate(-2px, 0); }
+}
+@keyframes wave-out {
+  0% { transform: scale(.3); opacity: .95; }
+  100% { transform: scale(6); opacity: 0; }
+}
+@keyframes cell-flash {
+  0% { filter: none; }
+  35% { filter: brightness(1.7) saturate(1.4); }
+  100% { filter: none; }
+}
+@keyframes particle {
+  0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(.3); opacity: 0; }
+}
+@keyframes banner-in {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.4); }
+  18% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+  30% { transform: translate(-50%, -50%) scale(1); }
+  80% { opacity: 1; transform: translate(-50%, -60%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -80%) scale(.95); }
+}
+@keyframes calm-in {
+  0% { opacity: 0; transform: translate(-50%, -40%); }
+  20%, 75% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -60%); }
+}

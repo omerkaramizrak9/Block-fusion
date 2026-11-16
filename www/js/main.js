@@ -17,6 +17,7 @@ import { Entitlements, ENT_KEY } from './monetization/store/StoreService.js';
 import { Settings, SETTINGS_KEY } from './settings/Settings.js';
 import { ThemeManager, UNLOCKED_KEY } from './theme/ThemeManager.js';
 import { SettingsUI } from './ui/SettingsUI.js';
+import { ComboFX } from './ui/ComboFX.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -93,6 +94,7 @@ async function boot() {
   applyModeTheme();
 
   const renderer = new Renderer({ bus, game, els, settings });
+  new ComboFX({ bus, els, settings });
 
   // Reklam altyapısı: başlatma hatası oyunu etkilemez (reklamsız devam edilir)
   const ads = new AdService({ provider: createAdProvider(Platform), bus });

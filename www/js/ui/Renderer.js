@@ -2,8 +2,8 @@
 // EventBus olaylarını dinler.
 import { CONFIG } from '../config.js';
 import { Platform } from '../platform/Platform.js';
+import { comboTier } from './ComboFX.js';
 
-const PRAISE = { 2: 'Harika!', 3: 'Muhteşem!', 4: 'İnanılmaz!' };
 
 export class Renderer {
   constructor({ bus, game, els, settings }) {
@@ -167,17 +167,14 @@ export class Renderer {
     const cc = col + (piece.shape.cols - 1) / 2;
 
     if (cleared.length) {
+      // Temel temizleme animasyonu + puan. Övgü yazıları, sarsıntı, dalgalar ve
+      // büyük kombo kutlamaları ComboFX.js'te (ayarlara göre).
       this._spawnClearFx(cleared, cr, cc);
       const lineCount = lines.rows.length + lines.cols.length;
-      this._floatText(`+${result.points}`, cr, cc);
-      if (result.combo >= 2) {
-        this._floatText(`Kombo x${result.combo}`, cr - 1.2, cc, true);
-      } else if (PRAISE[Math.min(lineCount, 4)]) {
-        this._floatText(PRAISE[Math.min(lineCount, 4)], cr - 1.2, cc, true);
-      }
-      if (result.boardClear) this._floatText('Tahta Temiz!', 3.5, 3.5, true);
-      if (lineCount >= 2) this._shake();
-      haptic(lineCount >= 2 ? 'heavy' : 'medium');
+      if (comboTier({ combo: result.combo, lines: lineCount, boardClear: result.boardClear }) === 'small') {
+        this._floatText(`+${result.points}`, cr, cc);
+        haptic('medium');
+      } // büyük kombolarda puan ve titreşim ComboFX kutlamasında
     } else {
       haptic('light');
     }
@@ -210,13 +207,6 @@ export class Renderer {
     el.style.top = `calc(var(--pitch) * ${clamp(r + 0.5)})`;
     this.els.fx.appendChild(el);
     setTimeout(() => el.remove(), 950);
-  }
-
-  _shake() {
-    const b = this.els.board;
-    b.classList.remove('shake');
-    void b.offsetWidth;
-    b.classList.add('shake');
   }
 
   _onScore({ value, best, combo, delta }) {
