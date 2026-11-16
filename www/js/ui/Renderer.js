@@ -6,8 +6,10 @@ import { Platform } from '../platform/Platform.js';
 const PRAISE = { 2: 'Harika!', 3: 'Muhteşem!', 4: 'İnanılmaz!' };
 
 export class Renderer {
-  constructor({ bus, game, els }) {
+  constructor({ bus, game, els, settings }) {
     this.bus = bus;
+    this.settings = settings;
+    Renderer.settings = settings;
     this.game = game;
     this.els = els;
     this.size = CONFIG.boardSize;
@@ -56,7 +58,7 @@ export class Renderer {
         const cell = board.get(r, c);
         if (cell) {
           el.classList.add('filled');
-          el.style.setProperty('--c', cell.color);
+          el.style.setProperty('--c', paletteVar(cell.color));
         } else {
           el.classList.remove('filled');
           el.style.removeProperty('--c');
@@ -72,7 +74,7 @@ export class Renderer {
     for (const [dr, dc] of piece.shape.cells) {
       const el = this.cellEls[row + dr][col + dc];
       el.classList.add('preview');
-      el.style.setProperty('--c', piece.color);
+      el.style.setProperty('--c', paletteVar(piece.color));
       this.previewed.push(el);
     }
     const mark = (el) => { el.classList.add('will-clear'); this.previewed.push(el); };
@@ -189,7 +191,7 @@ export class Renderer {
       wrap.className = 'fx-block';
       wrap.style.left = `calc(var(--pitch) * ${c})`;
       wrap.style.top = `calc(var(--pitch) * ${r})`;
-      wrap.style.setProperty('--c', color);
+      wrap.style.setProperty('--c', paletteVar(color));
       const dist = Math.hypot(r - originR, c - originC);
       wrap.style.setProperty('--d', `${Math.round(dist * 35)}ms`);
       wrap.appendChild(document.createElement('i'));
@@ -269,6 +271,9 @@ export class Renderer {
   hideGameOver() { this.els.gameover.classList.add('hidden'); }
 }
 
+/** Palet indeksini temanın CSS değişkenine çevirir: 3 -> var(--p3) */
+export function paletteVar(i) { return `var(--p${i})`; }
+
 /** Bir parçayı DOM öğesi olarak oluşturur (tepsi ve sürükleme için ortak). */
 export function buildPieceEl(piece, className, pitch) {
   const { rows, cols, cells } = piece.shape;
@@ -284,7 +289,7 @@ export function buildPieceEl(piece, className, pitch) {
       pc.classList.add('on');
       const b = document.createElement('div');
       b.className = 'block';
-      b.style.setProperty('--c', piece.color);
+      b.style.setProperty('--c', paletteVar(piece.color));
       pc.appendChild(b);
     }
     el.appendChild(pc);
@@ -293,6 +298,6 @@ export function buildPieceEl(piece, className, pitch) {
 }
 
 function haptic(kind) {
-  if (CONFIG.vibration) Platform.haptic(kind);
+  if (Renderer.settings?.get('vibration') ?? CONFIG.vibration) Platform.haptic(kind);
 }
 Renderer.haptic = haptic;

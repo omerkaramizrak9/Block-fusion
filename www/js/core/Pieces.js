@@ -1,5 +1,5 @@
 // Rastgele parça üretimi.
-import { SHAPES, SHAPES_BY_ID, COLORS } from '../config.js';
+import { SHAPES, SHAPES_BY_ID, PALETTE_SIZE } from '../config.js';
 import { makeShape } from './Rotation.js';
 
 let nextId = 1;
@@ -14,13 +14,14 @@ export function pickWeighted(list, rng = Math.random) {
   return list[list.length - 1];
 }
 
+/** color: palet indeksi (0..PALETTE_SIZE-1) */
 export function createPiece(shape, color) {
   return { id: nextId++, shape, color };
 }
 
-export function randomPiece({ shapes = SHAPES, colors = COLORS, rng = Math.random } = {}) {
+export function randomPiece({ shapes = SHAPES, rng = Math.random } = {}) {
   const shape = pickWeighted(shapes, rng);
-  const color = colors[Math.floor(rng() * colors.length)];
+  const color = Math.floor(rng() * PALETTE_SIZE);
   return createPiece(shape, color);
 }
 

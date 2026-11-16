@@ -13,6 +13,10 @@ import { Layout } from './ui/Layout.js';
 import { RotationUI } from './ui/RotationUI.js';
 import { AdService } from './monetization/ads/AdService.js';
 import { createAdProvider } from './monetization/ads/createAdProvider.js';
+import { Entitlements, ENT_KEY } from './monetization/store/StoreService.js';
+import { Settings, SETTINGS_KEY } from './settings/Settings.js';
+import { ThemeManager, UNLOCKED_KEY } from './theme/ThemeManager.js';
+import { SettingsUI } from './ui/SettingsUI.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -36,7 +40,7 @@ function preventBrowserGestures() {
 
 async function boot() {
   await Platform.init();
-  await storage.init(Object.values(CONFIG.storageKeys));
+  await storage.init([...Object.values(CONFIG.storageKeys), SETTINGS_KEY, UNLOCKED_KEY, ENT_KEY]);
   preventBrowserGestures();
 
   const els = {
@@ -65,14 +69,30 @@ async function boot() {
     rewardError: $('reward-error'),
     rewardWatch: $('reward-watch'),
     rewardSkip: $('reward-skip'),
-    toast: $('toast')
+    toast: $('toast'),
+    settings: $('settings'),
+    settingsBtn: $('settings-btn'),
+    settingsClose: $('settings-close'),
+    setVibration: $('set-vibration'),
+    setEffects: $('set-effects'),
+    vibNote: $('vib-note'),
+    themeGrid: $('theme-grid')
   };
 
   const bus = new EventBus();
+  const settings = new Settings(bus);
+  const entitlements = new Entitlements();
+  const themes = new ThemeManager({ bus, entitlements });
   const layout = new Layout(els.app);
   // İleride: mod seçim ekranından new AdventureMode(level) verilebilir.
   const game = new Game({ mode: new EndlessMode(), bus });
-  const renderer = new Renderer({ bus, game, els });
+
+  // Temayı oyun çizilmeden önce uygula (renk sıçraması olmasın)
+  const applyModeTheme = () => themes.apply(themes.resolve(game.mode.themeId({ settings, themes })).id);
+  themes.checkProgress({ best: game.score.best });
+  applyModeTheme();
+
+  const renderer = new Renderer({ bus, game, els, settings });
 
   // Reklam altyapısı: başlatma hatası oyunu etkilemez (reklamsız devam edilir)
   const ads = new AdService({ provider: createAdProvider(Platform), bus });
@@ -83,6 +103,15 @@ async function boot() {
     game, renderer, els, layout,
     onTap: (slot) => rotationUI.requestRotate(slot)
   });
+
+  const settingsUI = new SettingsUI({
+    settings, themes, bus, els,
+    onThemeChosen: () => applyModeTheme()
+  });
+
+  // Skor ilerledikçe tema kilitleri açılır
+  bus.on('score', ({ best }) => themes.checkProgress({ best }));
+  bus.on('theme:unlocked', ({ theme }) => rotationUI.toast(`Yeni tema açıldı: ${theme.name}!`, 'good'));
 
   const closeConfirm = () => els.confirm.classList.add('hidden');
   $('restart-btn').addEventListener('click', () => {
@@ -100,6 +129,7 @@ async function boot() {
   Platform.onBackButton(() => {
     if (ads.showing) return true; // reklam açıkken geri tuşu yok sayılır
     if (rotationUI.isOpen) { rotationUI.skip(); return true; }
+    if (settingsUI.isOpen) { settingsUI.close(); return true; }
     if (!els.confirm.classList.contains('hidden')) { closeConfirm(); return true; }
     return false;
   });
@@ -108,7 +138,7 @@ async function boot() {
   Platform.hideSplash();
 
   // Hata ayıklama/test için konsoldan erişim
-  window.blockFusion = { game, bus, Platform, ads, rotationUI };
+  window.blockFusion = { game, bus, Platform, ads, rotationUI, settings, themes, entitlements };
 }
 
 boot();

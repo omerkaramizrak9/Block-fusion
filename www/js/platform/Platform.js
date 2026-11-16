@@ -80,6 +80,17 @@ export const Platform = {
     } catch { /* yok say */ }
   },
 
+  /** Titreşim/dokunsal geri bildirim bu cihazda var mı? (iOS Safari web: yok) */
+  get canVibrate() {
+    return (this.isNative && !!plugins.Haptics) || typeof navigator.vibrate === 'function';
+  },
+
+  /** Android durum çubuğu rengini temaya uydurur (iOS'ta şeffaf kalır). */
+  setStatusBarColor(color) {
+    if (!this.isNative || this.os !== 'android') return;
+    try { plugins.StatusBar?.setBackgroundColor?.({ color }); } catch { /* yok say */ }
+  },
+
   hideSplash() {
     try { plugins.SplashScreen?.hide?.(); } catch { /* yok say */ }
   }

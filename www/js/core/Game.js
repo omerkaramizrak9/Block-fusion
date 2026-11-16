@@ -16,7 +16,7 @@
 //                                               sonra addRotations() ya da declineRescue()
 //   'unstuck'        { }
 
-import { CONFIG } from '../config.js';
+import { CONFIG, LEGACY_COLORS, PALETTE_SIZE } from '../config.js';
 import { Board } from './Board.js';
 import { Score } from './Score.js';
 import { PowerUps } from '../powerups/PowerUps.js';
@@ -24,7 +24,14 @@ import { pieceToData, pieceFromData } from './Pieces.js';
 import { rotateCW, isRotationSymmetric, otherOrientations } from './Rotation.js';
 import { storage } from '../storage.js';
 
-const SAVE_VERSION = 1;
+const SAVE_VERSION = 2; // v2: renkler palet indeksi (v1: renk kodu)
+
+/** Kayıttaki renk değerini palet indeksine çevirir (v1 uyumluluğu). */
+function toColorIndex(v) {
+  if (typeof v === 'number') return ((v % PALETTE_SIZE) + PALETTE_SIZE) % PALETTE_SIZE;
+  const i = LEGACY_COLORS.indexOf(String(v).toLowerCase());
+  return i >= 0 ? i : 0;
+}
 
 export class Game {
   constructor({ mode, bus }) {
@@ -67,7 +74,7 @@ export class Game {
     return {
       v: SAVE_VERSION,
       mode: this.mode.id,
-      board: this.board.cells.map((row) => row.map((c) => (c ? c.color : 0))),
+      board: this.board.cells.map((row) => row.map((c) => (c ? c.color + 1 : 0))), // 0 = boş
       tray: this.tray.map(pieceToData),
       score: this.score.value,
       combo: this.score.combo,
@@ -90,15 +97,16 @@ export class Game {
   /** @returns {boolean} kayıt bulunup yüklendiyse true */
   resume() {
     const data = this.mode.saveKey && storage.get(this.mode.saveKey);
-    if (!data || data.v !== SAVE_VERSION || data.mode !== this.mode.id) return false;
+    if (!data || (data.v !== 1 && data.v !== SAVE_VERSION) || data.mode !== this.mode.id) return false;
+    const legacy = data.v === 1;
     const n = this.board.size;
     if (!Array.isArray(data.board) || data.board.length !== n) return false;
-    const tray = (data.tray || []).map(pieceFromData);
+    const tray = (data.tray || []).map((d) => pieceFromData(d && { ...d, c: toColorIndex(d.c) }));
     if (tray.length !== CONFIG.traySize) return false;
 
     this.board.reset();
     data.board.forEach((row, r) => row.forEach((color, c) => {
-      if (color) this.board.cells[r][c] = { color };
+      if (color) this.board.cells[r][c] = { color: legacy ? toColorIndex(color) : toColorIndex(color - 1) };
     }));
     this.score.reset();
     this.score.value = data.score | 0;

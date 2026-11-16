@@ -54,16 +54,14 @@ export const CONFIG = {
   }
 };
 
-// Parlak blok renkleri
-export const COLORS = [
-  '#ff4d6d', // kırmızı-pembe
-  '#ffb703', // turuncu-sarı
-  '#4cc9f0', // camgöbeği
-  '#3ee07a', // yeşil
-  '#c77dff', // mor
-  '#ff7b39', // turuncu
-  '#00e5c7', // turkuaz
-  '#ffe14d'  // sarı
+// Blok renkleri artık TEMADAN gelir (www/js/theme/themes.js).
+// Bloklar renk kodu değil 0..PALETTE_SIZE-1 arası palet indeksi taşır;
+// böylece tema değişince tahtadaki bloklar da anında yeni renklere geçer.
+export const PALETTE_SIZE = 8;
+
+// Eski (v1) kayıtlardaki renk kodlarını indekse çevirmek için
+export const LEGACY_COLORS = [
+  '#ff4d6d', '#ffb703', '#4cc9f0', '#3ee07a', '#c77dff', '#ff7b39', '#00e5c7', '#ffe14d'
 ];
 
 // Parça şekilleri: 'X' dolu, '.' boş. weight = çıkma sıklığı.

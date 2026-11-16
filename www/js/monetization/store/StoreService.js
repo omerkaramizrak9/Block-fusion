@@ -15,9 +15,9 @@
 import { PRODUCTS, PRODUCTS_BY_ID } from './catalog.js';
 import { storage } from '../../storage.js';
 
-const ENT_KEY = 'blockfusion.entitlements';
+export const ENT_KEY = 'blockfusion.entitlements';
 
-/** Kalıcı kilitler (reklamsız, temalar, premium). */
+/** Kalıcı kilitler (temalar, kozmetikler). */
 export class Entitlements {
   constructor() { this.set = new Set(storage.get(ENT_KEY, [])); }
   has(id) { return this.set.has(id); }

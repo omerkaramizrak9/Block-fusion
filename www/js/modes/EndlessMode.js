@@ -7,6 +7,8 @@
 //   afterMove(game, result)   -> hamle sonrası (ör. görev kontrolü, kazanma)
 //   isGameOver(game)          -> true ise oyun biter
 //   saveKey                   -> yarım kalan oyunun kayıt anahtarı (null: kaydetme)
+//   themeId({ settings })     -> bu modda kullanılacak tema
+//                                (Sonsuz: oyuncunun seçimi; Macera: atmosphereForLevel(level))
 
 import { CONFIG } from '../config.js';
 import { generateTray } from '../core/Pieces.js';
@@ -18,6 +20,8 @@ export class EndlessMode {
     this.bestKey = CONFIG.storageKeys.bestEndless;
     this.saveKey = CONFIG.storageKeys.saveEndless;
   }
+
+  themeId({ settings }) { return settings.get('endlessTheme'); }
 
   setup(_game) { /* Sonsuz modda boş tahtayla başlanır */ }
 

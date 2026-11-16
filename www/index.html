@@ -29,9 +29,14 @@
         <span id="score" class="score-value">0</span>
         <span id="combo" class="combo" aria-live="polite"></span>
       </div>
-      <button id="restart-btn" class="icon-btn" aria-label="Yeniden başlat" title="Yeniden başlat">
-        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
-      </button>
+      <div class="hud-actions">
+        <button id="settings-btn" class="icon-btn" aria-label="Ayarlar" title="Ayarlar">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1l-.4-2.7h-4l-.4 2.7a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L4.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.6 7.6 0 0 0 1.7 1l.4 2.7h4l.4-2.7a7.6 7.6 0 0 0 1.7-1l2.5 1 2-3.5L19.4 13zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>
+        </button>
+        <button id="restart-btn" class="icon-btn" aria-label="Yeniden başlat" title="Yeniden başlat">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
+        </button>
+      </div>
     </header>
 
     <main class="play-area">
@@ -89,6 +94,23 @@
       <p id="reward-error" class="reward-error hidden" role="alert"></p>
       <button id="reward-watch" class="primary-btn">▶ Reklam İzle</button>
       <button id="reward-skip" class="text-btn">Hayır, teşekkürler</button>
+    </div>
+  </div>
+
+  <div id="settings" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="overlay-card settings-card">
+      <h2 id="settings-title">Ayarlar</h2>
+      <label class="setting-row">
+        <span class="setting-text"><b>Titreşim</b><small id="vib-note">Dokunsal geri bildirim</small></span>
+        <input type="checkbox" id="set-vibration" class="switch">
+      </label>
+      <label class="setting-row">
+        <span class="setting-text"><b>Yoğun görsel efektler</b><small>Ekran sarsıntısı, renk dalgaları, parçacıklar</small></span>
+        <input type="checkbox" id="set-effects" class="switch">
+      </label>
+      <h3 class="settings-sub">Tema <small>Sonsuz Mod</small></h3>
+      <div id="theme-grid" class="theme-grid" role="radiogroup" aria-label="Tema seçimi"></div>
+      <button id="settings-close" class="primary-btn">Tamam</button>
     </div>
   </div>
 

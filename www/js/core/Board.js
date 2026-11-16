@@ -1,5 +1,5 @@
 // Oyun tahtası: yalnızca veri ve kurallar (DOM yok).
-// Her hücre null (boş) veya { color } nesnesidir. İleride hücreye
+// Her hücre null (boş) veya { color } nesnesidir (color = palet indeksi). İleride hücreye
 // { color, type: 'stone' | 'ice' ... } gibi alanlar eklenebilir (Macera Modu).
 
 export class Board {

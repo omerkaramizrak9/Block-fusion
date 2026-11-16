@@ -2,18 +2,45 @@
    Block Fusion – stil dosyası
    Boyutlar JS tarafından --board ve --pitch değişkenleriyle ayarlanır.
    ========================================================== */
+/* Tema renkleri: varsayılanlar "Gece Mavisi" ile aynıdır; ThemeManager çalışma
+   anında üzerine yazar. @property kaydı sayesinde tema geçişi yumuşak olur
+   (desteklemeyen eski tarayıcılarda anında değişir). */
+@property --bg-1 { syntax: '<color>'; inherits: true; initial-value: #0e1630; }
+@property --bg-2 { syntax: '<color>'; inherits: true; initial-value: #080e20; }
+@property --bg-glow-1 { syntax: '<color>'; inherits: true; initial-value: #16234a; }
+@property --bg-glow-2 { syntax: '<color>'; inherits: true; initial-value: #0d1838; }
+@property --panel { syntax: '<color>'; inherits: true; initial-value: #131d3a; }
+@property --panel-2 { syntax: '<color>'; inherits: true; initial-value: #182446; }
+@property --cell-empty { syntax: '<color>'; inherits: true; initial-value: #17223f; }
+
 :root {
-  --bg-1: #0b1638;
-  --bg-2: #081029;
-  --panel: #12224d;
-  --panel-2: #172b5e;
-  --cell-empty: #1a2c5c;
-  --cell-empty-edge: #22376e;
-  --text: #eaf0ff;
-  --text-dim: #8fa3d6;
-  --accent: #ffd23f;
-  --good: #3ee07a;
-  --bad: #ff5c7a;
+  --bg-1: #0e1630;
+  --bg-2: #080e20;
+  --bg-glow-1: #16234a;
+  --bg-glow-2: #0d1838;
+  --panel: #131d3a;
+  --panel-2: #182446;
+  --cell-empty: #17223f;
+  --cell-empty-edge: #1f2b4c;
+  --text: #dfe5f5;
+  --text-dim: #7d8bad;
+  --accent: #e0b85a;
+  --good: #5fd08a;
+  --bad: #e2667e;
+  --shadow-dark: rgba(0, 0, 0, .45);
+
+  /* Blok paleti (mat) ve efekt renkleri (parlak, yalnızca kutlamalarda) */
+  --p0: #b45d6f; --p1: #c7955a; --p2: #5a8daa; --p3: #5e9c78;
+  --p4: #8873b5; --p5: #bd7a5a; --p6: #4f9b95; --p7: #bcab66;
+  --fx0: #ff5c7a; --fx1: #ffd23f; --fx2: #4cc9f0; --fx3: #3ee07a;
+
+  /* Mat görünüm: hafif parlama, ışıma yok */
+  --block-hl: rgba(255, 255, 255, .16);
+  --block-hl-edge: rgba(255, 255, 255, .14);
+  --block-glow: 0px;
+
+  transition: --bg-1 .6s, --bg-2 .6s, --bg-glow-1 .6s, --bg-glow-2 .6s,
+              --panel .6s, --panel-2 .6s, --cell-empty .6s;
 
   --board: 320px;   /* tahtanın iç genişliği (JS günceller) */
   --pitch: 40px;    /* bir hücrenin adımı (JS günceller) */
@@ -42,8 +69,8 @@ html, body {
 
 body {
   background:
-    radial-gradient(120% 70% at 50% 0%, #1a3172 0%, transparent 60%),
-    radial-gradient(90% 60% at 50% 100%, #10215a 0%, transparent 70%),
+    radial-gradient(120% 70% at 50% 0%, var(--bg-glow-1) 0%, transparent 60%),
+    radial-gradient(90% 60% at 50% 100%, var(--bg-glow-2) 0%, transparent 70%),
     linear-gradient(180deg, var(--bg-1), var(--bg-2));
 }
 
@@ -77,7 +104,7 @@ body {
 .hud-score { display: flex; flex-direction: column; align-items: center; }
 .score-value {
   font-size: 44px; font-weight: 900; line-height: 1;
-  text-shadow: 0 0 18px rgba(120, 170, 255, .45);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .3);
   font-variant-numeric: tabular-nums;
 }
 .score-value.bump { animation: bump .28s ease-out; }
@@ -97,10 +124,10 @@ body {
   background: var(--panel-2);
   color: var(--text);
   display: grid; place-items: center;
-  box-shadow: 0 4px 0 #0a1534, inset 0 1px 0 rgba(255,255,255,.08);
+  box-shadow: 0 4px 0 var(--shadow-dark), inset 0 1px 0 rgba(255,255,255,.08);
   cursor: pointer;
 }
-.icon-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0a1534; }
+.icon-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--shadow-dark); }
 
 /* ---------- Tahta ---------- */
 .play-area { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
@@ -137,11 +164,12 @@ body {
 .cell.filled::after { background: var(--c); }
 .cell.filled::after,
 .block {
-  background-image: linear-gradient(160deg, rgba(255,255,255,.42) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,.18) 100%);
+  /* Mat blok: düşük parlaklık, yumuşak kenar gölgesi */
+  background-image: linear-gradient(160deg, var(--block-hl) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,.16) 100%);
   box-shadow:
-    inset 0 -4px 0 rgba(0,0,0,.22),
-    inset 0 2px 0 rgba(255,255,255,.35),
-    0 0 9px -2px var(--c);
+    inset 0 -3px 0 rgba(0,0,0,.24),
+    inset 0 1px 0 var(--block-hl-edge),
+    0 0 var(--block-glow) -2px var(--c);
 }
 .cell.pop::after { animation: pop .26s ease-out; }
 
@@ -186,7 +214,7 @@ body {
   font-weight: 900;
   font-size: 26px;
   color: #fff;
-  text-shadow: 0 2px 0 rgba(0,0,0,.35), 0 0 14px var(--glow, #7fb2ff);
+  text-shadow: 0 2px 0 rgba(0,0,0,.35), 0 0 12px var(--glow, var(--fx2));
   white-space: nowrap;
   animation: float-up .9s ease-out forwards;
 }
@@ -246,13 +274,14 @@ body {
   margin-left: auto;
   height: 34px; padding: 0 14px;
   border: 0; border-radius: 17px;
-  background: linear-gradient(180deg, #3ee07a, #1fb35a);
+  background: var(--good);
+  background-image: linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.1));
   color: #062a14; font-weight: 900; font-size: 15px;
-  box-shadow: 0 3px 0 #127a3c;
+  box-shadow: 0 3px 0 rgba(0,0,0,.35);
   cursor: pointer;
   animation: hint-pulse 1.4s ease-in-out infinite alternate;
 }
-.rot-ad-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #127a3c; }
+.rot-ad-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.35); }
 .rot-ad-btn .play { font-size: 12px; }
 
 /* ---------- Ödül penceresi ---------- */
@@ -364,7 +393,7 @@ body {
   padding: 26px 22px 22px;
   border-radius: 22px;
   text-align: center;
-  background: linear-gradient(180deg, #1d3577, #12224d);
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
   box-shadow: 0 24px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.1);
   animation: card-in .4s cubic-bezier(.2, 1.3, .4, 1);
 }
@@ -384,9 +413,9 @@ body {
   cursor: pointer;
 }
 .btn-row .primary-btn, .btn-row .secondary-btn { margin-top: 0; }
-.primary-btn { background: linear-gradient(180deg, #ffd84f, #ffb000); color: #3a2500; box-shadow: 0 5px 0 #b87800; }
-.secondary-btn { background: var(--panel-2); color: var(--text); box-shadow: 0 5px 0 #0a1534; }
-.primary-btn:active, .secondary-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #0a1534; }
+.primary-btn { background: var(--accent); background-image: linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.08)); color: #2a1d05; box-shadow: 0 5px 0 rgba(0,0,0,.35); }
+.secondary-btn { background: var(--panel-2); color: var(--text); box-shadow: 0 5px 0 var(--shadow-dark); }
+.primary-btn:active, .secondary-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--shadow-dark); }
 
 /* ---------- Animasyonlar ---------- */
 @keyframes pop {
@@ -439,3 +468,77 @@ body {
   *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }
 .ads-left { display: inline-block; margin-top: 6px; color: var(--text-dim); font-size: 13px; font-weight: 700; }
+
+/* ---------- HUD düğmeleri ---------- */
+.hud-actions { justify-self: end; display: flex; gap: 8px; }
+.hud-actions .icon-btn { width: 42px; height: 42px; border-radius: 13px; }
+
+/* ---------- Ayarlar ---------- */
+.settings-card {
+  max-height: calc(var(--app-h, 100dvh) - 40px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;           /* uzun listede parmakla kaydırma */
+  overscroll-behavior: contain;
+  text-align: left;
+}
+.settings-card h2 { text-align: center; }
+.setting-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 2px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  cursor: pointer;
+}
+.setting-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.setting-text b { font-size: 16px; }
+.setting-text small { color: var(--text-dim); font-size: 12.5px; }
+.setting-row.disabled { opacity: .5; cursor: default; }
+
+/* iOS benzeri anahtar; Android'de de aynı görünür */
+.switch {
+  -webkit-appearance: none; appearance: none;
+  flex: none; width: 50px; height: 30px; margin: 0;
+  border-radius: 15px;
+  background: rgba(255,255,255,.14);
+  position: relative; cursor: pointer;
+  transition: background .2s;
+}
+.switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.3);
+  transition: transform .2s;
+}
+.switch:checked { background: var(--good); }
+.switch:checked::after { transform: translateX(20px); }
+.switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.settings-sub { margin: 16px 0 10px; font-size: 16px; }
+.settings-sub small { color: var(--text-dim); font-weight: 600; font-size: 12px; margin-left: 4px; }
+.theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.theme-card {
+  position: relative;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 8px; border: 2px solid transparent; border-radius: 14px;
+  background: rgba(255,255,255,.04);
+  color: var(--text); text-align: left; font: inherit;
+  cursor: pointer;
+}
+.theme-card[aria-checked="true"] { border-color: var(--accent); }
+.theme-card.locked { cursor: default; }
+.theme-card.locked .theme-swatch { filter: grayscale(.7) brightness(.55); }
+.theme-swatch {
+  height: 46px; border-radius: 9px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+  padding: 8px;
+}
+.theme-swatch i { border-radius: 5px; }
+.theme-name { font-weight: 800; font-size: 13.5px; }
+.theme-lock { font-size: 11.5px; color: var(--text-dim); font-weight: 700; }
+.theme-card .check {
+  position: absolute; top: 6px; right: 8px;
+  width: 20px; height: 20px; border-radius: 50%;
+  display: none; place-items: center;
+  background: var(--accent); color: #2a1d05; font-size: 12px; font-weight: 900;
+}
+.theme-card[aria-checked="true"] .check { display: grid; }
