@@ -170,7 +170,6 @@ body {
     inset 0 1px 0 var(--block-hl-edge),
     0 0 var(--block-glow) -2px var(--c);
 }
-.cell.pop::after { animation: pop .26s ease-out; }
 
 /* Sürükleme önizlemesi */
 .cell.preview::after {
@@ -415,11 +414,6 @@ body {
 .primary-btn:active, .secondary-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--shadow-dark); }
 
 /* ---------- Animasyonlar ---------- */
-@keyframes pop {
-  0% { transform: scale(.6); }
-  60% { transform: scale(1.12); }
-  100% { transform: scale(1); }
-}
 @keyframes clear-out {
   0% { transform: scale(1); opacity: 1; }
   35% { transform: scale(1.15); opacity: 1; }
@@ -532,108 +526,6 @@ body {
 }
 .theme-card[aria-checked="true"] .check { display: grid; }
 
-/* ---------- Büyük kombo kutlamaları (ComboFX) ---------- */
-#app.screen-shake { animation: screen-shake .32s ease-in-out; }
-#app.screen-shake-strong { animation: screen-shake-strong .42s ease-in-out; }
-
-.board { transition: box-shadow .4s; }
-.board.combo-glow {
-  box-shadow: 0 18px 40px rgba(0,0,0,.45), 0 0 0 2px var(--fx1), 0 0 28px var(--fx0);
-}
-
-/* Renk dalgası: temanın parlak efekt renkleriyle genişleyen halka */
-.fx-wave {
-  position: absolute;
-  width: calc(var(--pitch) * 2); height: calc(var(--pitch) * 2);
-  margin: calc(var(--pitch) * -1) 0 0 calc(var(--pitch) * -1);
-  border-radius: 50%;
-  background: conic-gradient(var(--fx0), var(--fx1), var(--fx2), var(--fx3), var(--fx0));
-  -webkit-mask: radial-gradient(circle, transparent 55%, #000 58%, #000 70%, transparent 73%);
-  mask: radial-gradient(circle, transparent 55%, #000 58%, #000 70%, transparent 73%);
-  opacity: 0;
-  animation: wave-out .75s ease-out forwards;
-  will-change: transform, opacity;
-}
-.cell.flash::after { animation: cell-flash .55s ease-out var(--fd, 0ms) both; }
-
-.fx-particle {
-  position: absolute;
-  width: calc(var(--pitch) * .28); height: calc(var(--pitch) * .28);
-  margin: calc(var(--pitch) * -.14) 0 0 calc(var(--pitch) * -.14);
-  border-radius: 3px;
-  background: var(--pc);
-  animation: particle .8s cubic-bezier(.15, .7, .35, 1) forwards;
-  will-change: transform, opacity;
-}
-
-.fx-banner {
-  position: absolute; left: 50%; top: 38%;
-  transform: translate(-50%, -50%);
-  display: flex; flex-direction: column; align-items: center;
-  pointer-events: none; white-space: nowrap;
-  animation: banner-in 1.25s cubic-bezier(.2, 1.4, .4, 1) forwards;
-}
-.fx-banner b {
-  font-size: calc(var(--pitch) * .95); font-weight: 900; letter-spacing: .02em;
-  color: var(--fx1);
-  text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 0 18px var(--fx0);
-}
-.fx-banner.epic b {
-  font-size: calc(var(--pitch) * 1.15);
-  background: linear-gradient(90deg, var(--fx0), var(--fx1), var(--fx2), var(--fx3));
-  -webkit-background-clip: text; background-clip: text;
-  color: transparent;
-  text-shadow: none;
-  filter: drop-shadow(0 3px 0 rgba(0,0,0,.45));
-}
-.fx-banner span { font-size: calc(var(--pitch) * .5); font-weight: 900; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.4); }
-/* Yoğun efektler kapalı: sakin, renkli parıltısız yazı */
-.fx-banner.calm { animation: calm-in 1.2s ease-out forwards; }
-.fx-banner.calm b, .fx-banner.calm.epic b {
-  color: var(--accent); background: none; text-shadow: 0 2px 0 rgba(0,0,0,.4); filter: none;
-  font-size: calc(var(--pitch) * .8);
-}
-
-@keyframes screen-shake {
-  0%, 100% { transform: translate(0, 0); }
-  20% { transform: translate(-4px, 2px); }
-  40% { transform: translate(4px, -2px); }
-  60% { transform: translate(-3px, 1px); }
-  80% { transform: translate(2px, 0); }
-}
-@keyframes screen-shake-strong {
-  0%, 100% { transform: translate(0, 0); }
-  15% { transform: translate(-7px, 3px); }
-  30% { transform: translate(7px, -3px); }
-  45% { transform: translate(-5px, 2px); }
-  60% { transform: translate(5px, -1px); }
-  80% { transform: translate(-2px, 0); }
-}
-@keyframes wave-out {
-  0% { transform: scale(.3); opacity: .95; }
-  100% { transform: scale(6); opacity: 0; }
-}
-@keyframes cell-flash {
-  0% { filter: none; }
-  35% { filter: brightness(1.7) saturate(1.4); }
-  100% { filter: none; }
-}
-@keyframes particle {
-  0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(.3); opacity: 0; }
-}
-@keyframes banner-in {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(.4); }
-  18% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
-  30% { transform: translate(-50%, -50%) scale(1); }
-  80% { opacity: 1; transform: translate(-50%, -60%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -80%) scale(.95); }
-}
-@keyframes calm-in {
-  0% { opacity: 0; transform: translate(-50%, -40%); }
-  20%, 75% { opacity: 1; transform: translate(-50%, -50%); }
-  100% { opacity: 0; transform: translate(-50%, -60%); }
-}
 
 /* ---------- Ayarlar v2: gruplar, segmentli seçim, kaydırıcı ---------- */
 .set-group {
@@ -690,3 +582,120 @@ body {
 
 .reset-btn { margin-top: 16px; font-size: 15px; padding: 12px; }
 .settings-card .primary-btn { margin-top: 10px; }
+
+/* ==========================================================
+   Animasyon sistemi (fx/). Tüm efekt öğeleri pointer-events: none →
+   dokunmatik kontrol hiçbir zaman engellenmez. Yalnızca transform/opacity.
+   ========================================================== */
+#app { position: relative; }
+.play-area { position: relative; z-index: 2; }     /* karartmanın üstünde */
+.fx-dim {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at 50% 45%, rgba(0,0,0,.25), rgba(0,0,0,.7));
+}
+
+/* Yerleştirme: kısa esneme (squash & stretch). --ls = yoğunluk çarpanı */
+.cell.land::after { animation: land .27s cubic-bezier(.3, 1.3, .5, 1); }
+.cell.land-soft::after { animation: land-soft .16s ease-out; }
+@keyframes land {
+  0%   { transform: scale(calc(1 + .15 * var(--ls, 1)), calc(1 - .15 * var(--ls, 1))); }
+  45%  { transform: scale(calc(1 - .05 * var(--ls, 1)), calc(1 + .06 * var(--ls, 1))); }
+  75%  { transform: scale(1.015, .99); }
+  100% { transform: none; }
+}
+@keyframes land-soft { from { opacity: .55; } to { opacity: 1; } }
+
+/* Temizleme: birleşen bloklar + ışık dalgası */
+.fx-line { position: absolute; pointer-events: none; }
+.fx-merge {
+  position: absolute; left: 0; top: 0; display: block;
+  box-sizing: border-box;
+  border: calc(var(--gap) / 2) solid transparent;
+  background: var(--c) padding-box;
+  border-radius: calc(var(--radius) + var(--gap) / 2);
+  will-change: transform, opacity;
+}
+.fx-beam {
+  position: absolute; inset: 8% 0; display: block;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--c) 20%, rgba(255,255,255,.88) 50%, var(--c) 80%, transparent);
+  box-shadow: 0 0 var(--glow, 10px) var(--c);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.fx-line.col .fx-beam {
+  inset: 0 8%;
+  background: linear-gradient(180deg, transparent, var(--c) 20%, rgba(255,255,255,.88) 50%, var(--c) 80%, transparent);
+}
+
+/* Geometrik parçacıklar */
+.fx-geo { position: absolute; display: block; pointer-events: none; opacity: 0; will-change: transform, opacity; }
+.fx-geo.sq  { border-radius: 2px; }
+.fx-geo.dia { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.fx-geo.tri { clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.fx-geo.hex { clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+
+.fx-ring {
+  position: absolute; display: block; border-radius: 50%;
+  border: 3px solid var(--fx1);
+  pointer-events: none; opacity: 0; will-change: transform, opacity;
+}
+.fx-rays {
+  position: absolute; left: 50%; top: 50%; display: block;
+  width: 170%; aspect-ratio: 1; border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(255,255,255,.5) 0deg 5deg, transparent 5deg 22deg);
+  -webkit-mask: radial-gradient(circle, #000 0, #000 22%, transparent 68%);
+  mask: radial-gradient(circle, #000 0, #000 22%, transparent 68%);
+  pointer-events: none; opacity: 0;
+}
+
+/* COMBO yazısı */
+.fx-combo {
+  position: absolute; left: 50%; top: 42%;
+  display: grid; grid-template-columns: auto auto; column-gap: .22em;
+  align-items: baseline; justify-items: center;
+  padding: 6px 20px; overflow: hidden;
+  font-size: var(--fs, 40px);
+  white-space: nowrap; pointer-events: none; opacity: 0;
+}
+.fx-combo b {
+  font-size: 1em; font-weight: 900;
+  background: linear-gradient(180deg, #fff 20%, var(--fx1));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 3px 0 rgba(0,0,0,.35));
+}
+.fx-combo em { font-style: normal; font-size: .8em; font-weight: 900; color: var(--accent); filter: drop-shadow(0 3px 0 rgba(0,0,0,.35)); }
+.fx-combo span { grid-column: 1 / -1; font-size: .42em; font-weight: 900; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.35); }
+.fx-combo.solo b { grid-column: 1 / -1; }
+.fx-combo .shine {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 30%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+  pointer-events: none; opacity: 0;
+}
+.fx-combo.calm b { background: none; color: var(--accent); -webkit-text-fill-color: currentColor; filter: none; font-size: .8em; }
+.fx-combo.calm .shine { display: none; }
+
+/* Rekor şeridi */
+.fx-record {
+  position: absolute; left: 50%; top: 4%;
+  padding: 8px 22px; border-radius: 999px;
+  background: var(--accent);
+  background-image: linear-gradient(180deg, rgba(255,255,255,.25), rgba(0,0,0,.08));
+  color: #1d1a2c; font-weight: 900; letter-spacing: .08em; font-size: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  white-space: nowrap; pointer-events: none; opacity: 0;
+}
+.fx-record.calm { transform: translate(-50%, 0); }
+
+.fx-text.calm { animation: calm-float .9s ease-out forwards; }
+@keyframes calm-float {
+  0% { opacity: 0; transform: translate(-50%, -50%); }
+  20%, 70% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -60%); }
+}
+
+/* Azaltılmış hareket: kalan CSS geçişleri de sadeleşir */
+:root[data-motion="reduced"] .slot.enter .piece,
+:root[data-motion="reduced"] .slot .piece.rot-anim { animation: land-soft .16s ease-out; }

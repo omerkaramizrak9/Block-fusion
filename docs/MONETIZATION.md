@@ -81,8 +81,11 @@ Zorunlu kurallar:
 ## 5. Ücretsiz ilerleme ile açılan temalar
 | Tema | Koşul |
 |---|---|
-| Gece Mavisi | Varsayılan |
-| Orman | Sonsuz Mod en iyi skor 1500 |
-| Kor | En iyi skor 3000 |
-| Kutup Işığı | En iyi skor 6000 |
-| Çöl Akşamı / Derin Okyanus | Macera Modu Dünya 3 / Dünya 4 |
+| Soft Ocean | Varsayılan (Macera Bölüm 1–20) |
+| Gece Mavisi | Baştan açık |
+| Velvet Night | Sonsuz en iyi skor 1500 **veya** Macera Dünya 2 (Bölüm 21–40) |
+| Forest Mist | Skor 3000 **veya** Macera Dünya 3 (Bölüm 41–60) |
+| Kor | Skor 4500 veya Macera Dünya 6 |
+| Kutup Işığı | Skor 6000 veya Macera Dünya 5 |
+| Çöl Akşamı | Macera Dünya 4 |
+| Neon Gece, Sakura | Mağaza (kozmetik, ileride) |

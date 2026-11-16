@@ -15,6 +15,7 @@
 //                                               arayüz ödüllü reklam teklif eder,
 //                                               sonra addRotations() ya da declineRescue()
 //   'unstuck'        { }
+//   'record'         { score, previousBest }    bu oyunda önceki rekor ilk kez geçildi
 
 import { CONFIG, LEGACY_COLORS, PALETTE_SIZE } from '../config.js';
 import { Board } from './Board.js';
@@ -57,6 +58,7 @@ export class Game {
     this.startBest = this.score.best;
     this.state = 'playing';
     this.adsWatched = 0;
+    this.recordBroken = false;
     if (CONFIG.rotation.resetEachGame || this.rotations === undefined) {
       this.rotations = CONFIG.rotation.startingRights;
     }
@@ -81,7 +83,8 @@ export class Game {
       movesSinceClear: this.score.movesSinceClear,
       startBest: this.startBest,
       rotations: this.rotations,
-      adsWatched: this.adsWatched
+      adsWatched: this.adsWatched,
+      recordBroken: this.recordBroken
     };
   }
 
@@ -115,6 +118,7 @@ export class Game {
     this.startBest = data.startBest ?? this.score.best;
     this.rotations = Number.isFinite(data.rotations) ? Math.max(0, data.rotations) : CONFIG.rotation.startingRights;
     this.adsWatched = data.adsWatched | 0;
+    this.recordBroken = !!data.recordBroken;
     this.tray = tray.every((p) => p === null) ? this.mode.createTray(this) : tray;
     this.state = 'playing';
 
@@ -275,5 +279,10 @@ export class Game {
       combo: this.score.combo,
       delta
     });
+    // Önceki rekor bu oyunda ilk kez geçildi (ilk oyun hariç: geçilecek rekor yoksa kutlama yok)
+    if (!this.recordBroken && this.startBest > 0 && this.score.value > this.startBest) {
+      this.recordBroken = true;
+      this.bus.emit('record', { score: this.score.value, previousBest: this.startBest });
+    }
   }
 }

@@ -1,7 +1,6 @@
 // Arayüz çizimi ve animasyonlar. Oyun mantığını değiştirmez; yalnızca
 // EventBus olaylarını dinler.
 import { CONFIG } from '../config.js';
-import { comboTier } from './ComboFX.js';
 
 
 export class Renderer {
@@ -148,36 +147,13 @@ export class Renderer {
   }
 
   // ---------- Olaylar ----------
-  _onPlaced({ placed, cleared, lines, result, row, col, piece }) {
+  _onPlaced() {
+    // Yalnızca tahtanın yeni durumunu çizer. Yerleştirme/temizleme animasyonları,
+    // ses ve titreşim fx/FXDirector.js'te.
     this.clearPreview();
     this.renderBoard();
-
-    const clearedKeys = new Set(cleared.map((x) => `${x.r},${x.c}`));
-    for (const [r, c] of placed) {
-      if (clearedKeys.has(`${r},${c}`)) continue;
-      const el = this.cellEls[r][c];
-      el.classList.remove('pop');
-      void el.offsetWidth;
-      el.classList.add('pop');
-      setTimeout(() => el.classList.remove('pop'), 300);
-    }
-
-    const cr = row + (piece.shape.rows - 1) / 2;
-    const cc = col + (piece.shape.cols - 1) / 2;
-
-    if (cleared.length) {
-      // Temel temizleme animasyonu + puan. Övgü yazıları, sarsıntı, dalgalar ve
-      // büyük kombo kutlamaları ComboFX.js'te (ayarlara göre).
-      this._spawnClearFx(cleared, cr, cc);
-      const lineCount = lines.rows.length + lines.cols.length;
-      if (comboTier({ combo: result.combo, lines: lineCount, boardClear: result.boardClear }) === 'small') {
-        this._floatText(`+${result.points}`, cr, cc);
-        this.feedback?.clear(lineCount >= 3 ? 'line3' : lineCount === 2 ? 'line2' : 'line1', { lines: lineCount, combo: result.combo });
-      } // büyük kombolarda ses/titreşim ComboFX kutlamasında
-    } else {
-      this.feedback?.play('place');
-    }
   }
+
 
   _spawnClearFx(cleared, originR, originC) {
     const layer = this.els.fx;
@@ -197,16 +173,7 @@ export class Renderer {
     layer.appendChild(frag);
   }
 
-  _floatText(text, r, c, big = false) {
-    const el = document.createElement('div');
-    el.className = 'fx-text' + (big ? ' big' : '');
-    el.textContent = text;
-    const clamp = (v) => Math.max(1, Math.min(this.size - 1, v));
-    el.style.left = `calc(var(--pitch) * ${clamp(c + 0.5)})`;
-    el.style.top = `calc(var(--pitch) * ${clamp(r + 0.5)})`;
-    this.els.fx.appendChild(el);
-    setTimeout(() => el.remove(), 950);
-  }
+
 
   _onScore({ value, best, combo, delta }) {
     this.els.best.textContent = String(best);

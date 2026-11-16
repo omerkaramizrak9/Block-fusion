@@ -23,13 +23,15 @@ Capacitor ile paketlenmiş Google Play / App Store uygulaması olarak çalışı
   - Döndürünce sığacak parçalar ↻ işaretiyle gösterilir
   - Oyun başına en fazla 3 ödüllü reklam (+5 hak); zorunlu reklam yok
   - Ayrıntılar ve gelir planı: [docs/MONETIZATION.md](docs/MONETIZATION.md)
-- **Temalar:** normal oyunda koyu, mat, göz yormayan renkler. Sonsuz Mod'da açılan
-  temalar Ayarlar'dan seçilir (skorla açılır; mağaza temaları ileride)
-- **Kombo kutlamaları:** büyük kombolarda kısa ekran sarsıntısı, renk dalgaları,
-  parçacık ve ödül yazısı (parlak renkler yalnızca burada)
-- **Ayarlar (⚙):** titreşim, yoğun görsel efektler, tema seçimi
-- **Macera Modu atmosferi:** her 20 bölümde yeni dünya, palet ve arka plan
-  (`theme/themes.js → atmosphereForLevel`); bölümler sonraki aşamada
+- **Paletler:** normal oyunda mat pastel renkler. Macera: Bölüm 1–20 *Soft Ocean*,
+  21–40 *Velvet Night*, 41–60 *Forest Mist*. Sonsuz Mod'da açılan temalar Ayarlar'dan seçilir
+- **Animasyonlar:** yerleştirmede esneme, temizlemede birleşme + ışık dalgası, hat sayısıyla
+  kademeli artan güç, büyük kombolarda karartma + geometrik parçacık + COMBO yazısı,
+  en büyük kombolarda 1,8 sn sinematik kutlama, rekor kutlaması
+- **Ses ve titreşim:** cihazda üretilen efektler ve sakin müzik; Android/iOS haptik desenleri
+- **Ayarlar (⚙):** ses efektleri, müzik, ses seviyeleri, titreşim + yoğunluk, ekran sarsıntısı,
+  özel animasyonlar, animasyon yoğunluğu, azaltılmış hareket, varsayılana dön, tema
+  — ayrıntılar: [docs/EFFECTS.md](docs/EFFECTS.md)
 
 ## Proje yapısı
 
@@ -49,10 +51,13 @@ www/                       ← ORTAK OYUN KODU (web + Android + iOS)
     modes/AdventureMode.js Macera Modu iskeleti (dünya atmosferi hazır)
     theme/                 temalar, Macera dünyaları, ThemeManager
     settings/Settings.js   oyuncu ayarları
+    fx/                    animasyon sistemi (FXDirector, Shake, LineClearFX, Particles, Celebration)
+    feedback/              titreşim (Haptics) ve ses+titreşim girişi (Feedback)
+    audio/                 ses efektleri ve müzik (Web Audio, dosyasız)
     powerups/PowerUps.js   Bomba / Yıldırım / Gökkuşağı (mantık hazır, arayüze bağlı değil)
     monetization/ads/      ödüllü reklam servisi (simülasyon + AdMob iskeleti)
     monetization/store/    uygulama içi satın alma kataloğu ve servis iskeleti
-    ui/                    Renderer, DragController, Layout, RotationUI, ComboFX, SettingsUI
+    ui/                    Renderer, DragController, Layout, RotationUI, SettingsUI
 android/                   Capacitor Android projesi (Android Studio ile açılır)
 ios/                       Capacitor iOS projesi (Xcode ile açılır)
 assets/                    uygulama simgesi ve açılış ekranı kaynak görselleri

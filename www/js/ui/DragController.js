@@ -99,7 +99,7 @@ export class DragController {
     const { left, top } = this._topLeft();
     d.el.style.transform = `translate(${left}px, ${top}px)`;
 
-    const rect = this.els.grid.getBoundingClientRect();
+    const rect = this._gridOrigin();
     const pitch = rect.width / CONFIG.boardSize;
     const col = Math.round((left - rect.left) / pitch);
     const row = Math.round((top - rect.top) / pitch);
@@ -108,6 +108,21 @@ export class DragController {
     d.col = col;
     d.res = this.game.preview(d.slot, row, col);
     this.renderer.showPreview(d.res, row, col);
+  }
+
+  /**
+   * Tahta ızgarasının ekrandaki konumu — sarsıntı/animasyon dönüşümlerinden
+   * ETKİLENMEZ. offsetLeft/Top dönüşümleri yok sayar; .play-area hiç dönüşmez.
+   * Böylece efekt oynarken bile parça doğru hücreye bırakılır.
+   */
+  _gridOrigin() {
+    const { playArea, board, grid } = this.els;
+    const pa = playArea.getBoundingClientRect();
+    return {
+      left: pa.left + board.offsetLeft + board.clientLeft + grid.offsetLeft,
+      top: pa.top + board.offsetTop + board.clientTop + grid.offsetTop,
+      width: grid.offsetWidth
+    };
   }
 
   _onUp(e, cancelled = false) {

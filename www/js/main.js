@@ -17,7 +17,7 @@ import { Entitlements, ENT_KEY } from './monetization/store/StoreService.js';
 import { Settings, SETTINGS_KEY } from './settings/Settings.js';
 import { ThemeManager, UNLOCKED_KEY } from './theme/ThemeManager.js';
 import { SettingsUI } from './ui/SettingsUI.js';
-import { ComboFX } from './ui/ComboFX.js';
+import { FXDirector } from './fx/FXDirector.js';
 import { Haptics } from './feedback/Haptics.js';
 import { Feedback } from './feedback/Feedback.js';
 import { AudioEngine } from './audio/AudioEngine.js';
@@ -50,6 +50,8 @@ async function boot() {
   const els = {
     app: $('app'),
     board: $('board'),
+    playArea: document.querySelector('.play-area'),
+    dim: $('fx-dim'),
     grid: $('board-grid'),
     fx: $('fx-layer'),
     tray: $('tray'),
@@ -101,7 +103,7 @@ async function boot() {
   applyModeTheme();
 
   const renderer = new Renderer({ bus, game, els, settings, feedback });
-  new ComboFX({ bus, els, settings, feedback });
+  new FXDirector({ bus, els, settings, feedback, layout });
 
   // Reklam altyapısı: başlatma hatası oyunu etkilemez (reklamsız devam edilir)
   const ads = new AdService({ provider: createAdProvider(Platform), bus });
