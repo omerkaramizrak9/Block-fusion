@@ -3,7 +3,7 @@
 //   - Kilit açma: skor ilerlemesi, Macera dünyası veya mağaza hakkı (entitlement)
 import { storage } from '../storage.js';
 import { Platform } from '../platform/Platform.js';
-import { THEMES, THEMES_BY_ID, DEFAULT_THEME } from './themes.js';
+import { THEMES, THEMES_BY_ID, DEFAULT_THEME, LEGACY_THEME_IDS } from './themes.js';
 
 export const UNLOCKED_KEY = 'blockfusion.themes.unlocked';
 
@@ -21,7 +21,8 @@ export class ThemeManager {
   constructor({ bus, entitlements = null }) {
     this.bus = bus;
     this.entitlements = entitlements;
-    this.unlocked = new Set(storage.get(UNLOCKED_KEY, []));
+    // Eski kimlikler yeni temalara aktarılır (ör. 'forest' → 'forest-mist')
+    this.unlocked = new Set(storage.get(UNLOCKED_KEY, []).map((id) => LEGACY_THEME_IDS[id] || id));
     this.current = null;
   }
 
@@ -39,7 +40,7 @@ export class ThemeManager {
   /** Kilitli temanın nasıl açılacağını anlatan kısa metin. */
   unlockHint(theme) {
     const u = theme.unlock;
-    if (u.type === 'score') return `En iyi skor ${u.best}`;
+    if (u.type === 'score') return u.world ? `Skor ${u.best} · Macera ${u.world}` : `En iyi skor ${u.best}`;
     if (u.type === 'adventure') return `Macera: Dünya ${u.world}`;
     if (u.type === 'product') return 'Mağaza (yakında)';
     return '';
@@ -53,7 +54,7 @@ export class ThemeManager {
     const fresh = THEMES.filter((t) => {
       if (this.unlocked.has(t.id)) return false;
       const u = t.unlock;
-      return (u.type === 'score' && best >= u.best) ||
+      return (u.type === 'score' && (best >= u.best || (u.world && adventureWorld >= u.world))) ||
              (u.type === 'adventure' && adventureWorld >= u.world);
     });
     if (fresh.length) {
@@ -66,7 +67,7 @@ export class ThemeManager {
 
   /** Açık değilse varsayılan temaya düşer. */
   resolve(id) {
-    const t = THEMES_BY_ID.get(id);
+    const t = THEMES_BY_ID.get(LEGACY_THEME_IDS[id] || id);
     return t && this.isUnlocked(t) ? t : THEMES_BY_ID.get(DEFAULT_THEME);
   }
 

@@ -62,7 +62,7 @@ export const Platform = {
     try {
       await plugins.StatusBar?.setStyle?.({ style: 'DARK' }); // açık renk yazı
       if (this.os === 'android') {
-        await plugins.StatusBar?.setBackgroundColor?.({ color: '#0b1638' });
+        await plugins.StatusBar?.setBackgroundColor?.({ color: '#143038' });
       }
     } catch { /* yok say */ }
   },

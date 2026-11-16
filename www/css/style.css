@@ -2,11 +2,11 @@
    Block Fusion – stil dosyası
    Boyutlar JS tarafından --board ve --pitch değişkenleriyle ayarlanır.
    ========================================================== */
-/* Tema renkleri: varsayılanlar "Gece Mavisi" ile aynıdır; ThemeManager çalışma
+/* Tema renkleri: varsayılanlar "Soft Ocean" ile aynıdır; ThemeManager çalışma
    anında üzerine yazar. @property kaydı sayesinde tema geçişi yumuşak olur
    (desteklemeyen eski tarayıcılarda anında değişir). */
-@property --bg-1 { syntax: '<color>'; inherits: true; initial-value: #0e1630; }
-@property --bg-2 { syntax: '<color>'; inherits: true; initial-value: #080e20; }
+@property --bg-1 { syntax: '<color>'; inherits: true; initial-value: #143038; }
+@property --bg-2 { syntax: '<color>'; inherits: true; initial-value: #0c1f25; }
 @property --bg-glow-1 { syntax: '<color>'; inherits: true; initial-value: #16234a; }
 @property --bg-glow-2 { syntax: '<color>'; inherits: true; initial-value: #0d1838; }
 @property --panel { syntax: '<color>'; inherits: true; initial-value: #131d3a; }
@@ -14,25 +14,25 @@
 @property --cell-empty { syntax: '<color>'; inherits: true; initial-value: #17223f; }
 
 :root {
-  --bg-1: #0e1630;
-  --bg-2: #080e20;
-  --bg-glow-1: #16234a;
-  --bg-glow-2: #0d1838;
-  --panel: #131d3a;
-  --panel-2: #182446;
-  --cell-empty: #17223f;
-  --cell-empty-edge: #1f2b4c;
-  --text: #dfe5f5;
-  --text-dim: #7d8bad;
-  --accent: #e0b85a;
+  --bg-1: #143038;
+  --bg-2: #0c1f25;
+  --bg-glow-1: #1d4450;
+  --bg-glow-2: #16323c;
+  --panel: #173740;
+  --panel-2: #1c414b;
+  --cell-empty: #1a3a43;
+  --cell-empty-edge: #244852;
+  --text: #e4f0ef;
+  --text-dim: #8eadae;
+  --accent: #b4a8e0;
   --good: #5fd08a;
   --bad: #e2667e;
   --shadow-dark: rgba(0, 0, 0, .45);
 
   /* Blok paleti (mat) ve efekt renkleri (parlak, yalnızca kutlamalarda) */
-  --p0: #b45d6f; --p1: #c7955a; --p2: #5a8daa; --p3: #5e9c78;
-  --p4: #8873b5; --p5: #bd7a5a; --p6: #4f9b95; --p7: #bcab66;
-  --fx0: #ff5c7a; --fx1: #ffd23f; --fx2: #4cc9f0; --fx3: #3ee07a;
+  --p0: #4e8e9a; --p1: #8cc6a0; --p2: #a596d4; --p3: #d6bf8f;
+  --p4: #d29b90; --p5: #8db3d4; --p6: #79c1b5; --p7: #c79ab6;
+  --fx0: #bdf2e4; --fx1: #d9cffb; --fx2: #c9f2d2; --fx3: #fbeec8;
 
   /* Mat görünüm: hafif parlama, ışıma yok */
   --block-hl: rgba(255, 255, 255, .16);
@@ -242,7 +242,6 @@ body {
   content: "↻";
   position: absolute; right: 8%; top: 4%;
   font-size: 15px; font-weight: 900; color: var(--accent);
-  animation: hint-pulse 1.2s ease-in-out infinite alternate;
 }
 .slot .piece.rot-anim { animation: rot-in .22s cubic-bezier(.2, 1.3, .4, 1); }
 .slot.wiggle .piece { animation: wiggle .3s ease-in-out; }
@@ -278,7 +277,6 @@ body {
   color: #062a14; font-weight: 900; font-size: 15px;
   box-shadow: 0 3px 0 rgba(0,0,0,.35);
   cursor: pointer;
-  animation: hint-pulse 1.4s ease-in-out infinite alternate;
 }
 .rot-ad-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.35); }
 .rot-ad-btn .play { font-size: 12px; }
@@ -400,7 +398,7 @@ body {
 .go-label { margin: 0; color: var(--text-dim); font-weight: 700; letter-spacing: .05em; }
 .go-score { margin: 4px 0; font-size: 56px; font-weight: 900; }
 .go-best { margin: 0 0 6px; color: var(--accent); font-weight: 800; }
-.go-newbest { margin: 0 0 8px; color: var(--good); font-weight: 900; animation: bump .6s ease-out infinite alternate; }
+.go-newbest { margin: 0 0 8px; color: var(--good); font-weight: 900; animation: bump .6s ease-out 1; }
 .btn-row { display: flex; gap: 10px; margin-top: 18px; }
 .btn-row > * { flex: 1; }
 .primary-btn, .secondary-btn {
