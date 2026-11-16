@@ -16,7 +16,8 @@ export const DEFAULTS = Object.freeze({
   effects: true,             // özel animasyonlar ve parçacıklar
   animIntensity: 'normal',   // 'light' | 'normal' | 'strong'
   reducedMotion: 'auto',     // 'auto' (sistem tercihi) | 'on' | 'off'
-  endlessTheme: DEFAULT_THEME
+  endlessTheme: DEFAULT_THEME,
+  designVersion: 2           // tasarım sürümü (tek seferlik geçişler için)
 });
 
 // Varsayılana dönerken korunanlar (oyuncunun kozmetik seçimi)
@@ -37,6 +38,12 @@ function migrate(saved) {
     out.effects = !!saved.intenseEffects;
     out.shake = !!saved.intenseEffects;
   }
+  // Tasarım 2 (MAJOR BLOCK premium): önceki varsayılan temada kalanlar yeni tasarıma geçer;
+  // bilerek başka bir tema seçmiş oyuncunun seçimi korunur.
+  if (!saved.designVersion || saved.designVersion < 2) {
+    if (!saved.endlessTheme || ['soft-ocean', 'midnight'].includes(saved.endlessTheme)) out.endlessTheme = 'major';
+    out.designVersion = 2;
+  }
   delete out.vibration;
   delete out.intenseEffects;
   return out;
@@ -50,6 +57,7 @@ function sanitize(v) {
   if (!LEVELS.includes(out.hapticStrength)) out.hapticStrength = 'normal';
   if (!LEVELS.includes(out.animIntensity)) out.animIntensity = 'normal';
   if (!['auto', 'on', 'off'].includes(out.reducedMotion)) out.reducedMotion = 'auto';
+  out.designVersion = Number(out.designVersion) || 1;
   for (const k of ['sfx', 'music', 'haptics', 'shake', 'effects']) out[k] = !!out[k];
   return out;
 }

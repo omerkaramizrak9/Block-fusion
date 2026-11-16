@@ -28,8 +28,12 @@ Capacitor ile paketlenmiş Google Play / App Store uygulaması olarak çalışı
   - Döndürünce sığacak parçalar ↻ işaretiyle gösterilir
   - Oyun başına en fazla 3 ödüllü reklam (+5 hak); zorunlu reklam yok
   - Ayrıntılar ve gelir planı: [docs/MONETIZATION.md](docs/MONETIZATION.md)
-- **Paletler:** normal oyunda mat pastel renkler. Macera: Bölüm 1–20 *Soft Ocean*,
-  21–40 *Velvet Night*, 41–60 *Forest Mist*. Sonsuz Mod'da açılan temalar Ayarlar'dan seçilir
+- **Görsel tasarım:** koyu bordo + lacivert sinematik arka plan, retro-fütüristik çizgiler,
+  ince bakır/altın çerçeveler, mat ve hafif dokulu, birbirinden net ayrılan bloklar
+  (*Major Premium*, varsayılan). Ayrıntılar: [docs/DESIGN.md](docs/DESIGN.md)
+- **Paletler:** Macera: Bölüm 1–20 *Soft Ocean*, 21–40 *Velvet Night*, 41–60 *Forest Mist*
+  (her 20 bölümde değişir). Sonsuz Mod'da açılan temalar Ayarlar'dan seçilir
+- **Sunucu karakteri:** HUD'da küçük bir yuva ayrıldı; animasyonlar sonraki aşamada
 - **Animasyonlar:** yerleştirmede esneme, temizlemede birleşme + ışık dalgası, hat sayısıyla
   kademeli artan güç, büyük kombolarda karartma + geometrik parçacık + COMBO yazısı,
   en büyük kombolarda 1,8 sn sinematik kutlama, rekor kutlaması
@@ -56,13 +60,15 @@ www/                       ← ORTAK OYUN KODU (web + Android + iOS)
     modes/AdventureMode.js Macera Modu iskeleti (dünya atmosferi hazır)
     theme/                 temalar, Macera dünyaları, ThemeManager
     settings/Settings.js   oyuncu ayarları
+  css/theme-major.css      premium tasarım katmanı
+  assets/fonts/            Chakra Petch (OFL) — gömülü font
     fx/                    animasyon sistemi (FXDirector, Shake, LineClearFX, Particles, Celebration)
     feedback/              titreşim (Haptics) ve ses+titreşim girişi (Feedback)
     audio/                 ses efektleri ve müzik (Web Audio, dosyasız)
     powerups/PowerUps.js   Bomba / Yıldırım / Gökkuşağı (mantık hazır, arayüze bağlı değil)
     monetization/ads/      ödüllü reklam servisi (simülasyon + AdMob iskeleti)
     monetization/store/    uygulama içi satın alma kataloğu ve servis iskeleti
-    ui/                    Renderer, DragController, Layout, RotationUI, SettingsUI
+    ui/                    Renderer, DragController, Layout, RotationUI, SettingsUI, PresenterSlot
 android/                   Capacitor Android projesi (Android Studio ile açılır)
 ios/                       Capacitor iOS projesi (Xcode ile açılır)
 assets/                    uygulama simgesi ve açılış ekranı kaynak görselleri

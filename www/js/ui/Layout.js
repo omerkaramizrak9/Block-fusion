@@ -32,7 +32,7 @@ export class Layout {
     const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
 
     const n = CONFIG.boardSize;
-    const hud = 86, rotateBar = 48, boardPad = 20, trayExtra = 30, gaps = 14;
+    const hud = 100, rotateBar = 50, boardPad = 24, trayExtra = 30, gaps = 14; // boardPad: 2×10 dolgu + 2×2 metal çerçeve
     const byWidth = (vw - padX - boardPad) / n;
     // Toplam yükseklik ≈ hud + 8·pitch + pad + (2.5·pitch + tray) + boşluklar
     const byHeight = (vh - padY - hud - rotateBar - boardPad - trayExtra - gaps) / (n + 2.5);

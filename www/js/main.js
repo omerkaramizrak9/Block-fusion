@@ -18,6 +18,7 @@ import { Settings, SETTINGS_KEY } from './settings/Settings.js';
 import { ThemeManager, UNLOCKED_KEY } from './theme/ThemeManager.js';
 import { SettingsUI } from './ui/SettingsUI.js';
 import { FXDirector } from './fx/FXDirector.js';
+import { PresenterSlot } from './ui/PresenterSlot.js';
 import { Haptics } from './feedback/Haptics.js';
 import { Feedback } from './feedback/Feedback.js';
 import { AudioEngine } from './audio/AudioEngine.js';
@@ -104,6 +105,7 @@ async function boot() {
 
   const renderer = new Renderer({ bus, game, els, settings, feedback });
   new FXDirector({ bus, els, settings, feedback, layout });
+  const presenter = new PresenterSlot({ el: $('presenter'), bus, settings });
 
   // Reklam altyapısı: başlatma hatası oyunu etkilemez (reklamsız devam edilir)
   const ads = new AdService({ provider: createAdProvider(Platform), bus });
@@ -159,7 +161,7 @@ async function boot() {
   Platform.hideSplash();
 
   // Hata ayıklama/test için konsoldan erişim
-  window.blockFusion = { game, bus, Platform, ads, rotationUI, settings, themes, entitlements, audio, haptics, feedback };
+  window.blockFusion = { game, bus, Platform, presenter, ads, rotationUI, settings, themes, entitlements, audio, haptics, feedback };
 }
 
 boot();

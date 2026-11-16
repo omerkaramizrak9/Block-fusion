@@ -7,6 +7,9 @@ import { THEMES, THEMES_BY_ID, DEFAULT_THEME, LEGACY_THEME_IDS } from './themes.
 
 export const UNLOCKED_KEY = 'blockfusion.themes.unlocked';
 
+// Tüm temalarda ortak bakır/altın çerçeve (tema kendi tonunu verebilir)
+const DEFAULT_METAL = { copper: '#c47a48', gold: '#e8b765', dark: '#5e321d' };
+
 const CSS_VARS = {
   bg1: '--bg-1', bg2: '--bg-2', glow1: '--bg-glow-1', glow2: '--bg-glow-2',
   panel: '--panel', panel2: '--panel-2',
@@ -78,6 +81,10 @@ export class ThemeManager {
     for (const [k, cssVar] of Object.entries(CSS_VARS)) root.setProperty(cssVar, theme.colors[k]);
     theme.palette.forEach((c, i) => root.setProperty(`--p${i}`, c));
     theme.fx.forEach((c, i) => root.setProperty(`--fx${i}`, c));
+    const metal = { ...DEFAULT_METAL, ...(theme.metal || {}) };
+    root.setProperty('--metal-copper', metal.copper);
+    root.setProperty('--metal-gold', metal.gold);
+    root.setProperty('--metal-dark', metal.dark);
     document.documentElement.dataset.theme = theme.id;
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme.colors.bg1);
     Platform.setStatusBarColor(theme.colors.bg1);

@@ -3,6 +3,12 @@
 // Tasarım kuralı: Normal oynanışta KOYU, MAT ve göz yormayan renkler (palette).
 // Parlak renkler (fx) yalnızca büyük kombo kutlamalarında kısa süre görünür.
 //
+// Bir tema şunları tanımlar (hepsi CSS değişkeni olarak uygulanır, ThemeManager):
+//   colors  : arka plan, panel, boş hücre, yazı, vurgu
+//   palette : 8 blok rengi (bloklar indeks taşır → tema değişince anında yeniden boyanır)
+//   fx      : kutlama renkleri (yalnızca büyük kombolarda)
+//   metal   : çerçeve detayları { copper, gold, dark } — verilmezse varsayılan bakır/altın
+//
 // unlock türleri:
 //   { type: 'free' }                         her zaman açık
 //   { type: 'score', best: N, world: W }     Sonsuz Mod en iyi skor N'e ulaşınca
@@ -11,6 +17,23 @@
 //   { type: 'product', productId: 'id' }     mağazadan satın alınınca (store/catalog.js)
 
 export const THEMES = [
+  // --- MAJOR BLOCK ana tasarımı (varsayılan): koyu bordo + lacivert, retro-fütüristik,
+  //     ince bakır/altın detaylar. Blok renkleri birbirinden ve arka plandan net ayrılır.
+  {
+    id: 'major',
+    name: 'Major Premium',
+    unlock: { type: 'free' },
+    colors: {
+      bg1: '#2b0d1d', bg2: '#080d22', glow1: '#5c1532', glow2: '#142257',
+      panel: '#0f1530', panel2: '#161d3d',
+      cellEmpty: '#1a2142', cellEdge: '#2c3560',
+      text: '#f4ede4', textDim: '#a89fb6', accent: '#e8b765'
+    },
+    // turkuaz, fuşya, turuncu, yeşil, mor, altın sarısı, mavi, mercan kırmızısı
+    palette: ['#1fc2bc', '#e2448f', '#ff7a29', '#4cc25a', '#9160e3', '#f2c335', '#3b8ff0', '#ef4f4a'],
+    fx: ['#6ff6ef', '#ff7cbd', '#ffb466', '#ffe08a'],
+    metal: { copper: '#c47a48', gold: '#e8b765', dark: '#5e321d' }
+  },
   // --- Macera Dünya 1 (Bölüm 1–20) — varsayılan
   {
     id: 'soft-ocean',
@@ -138,7 +161,7 @@ export const THEMES = [
 ];
 
 export const THEMES_BY_ID = new Map(THEMES.map((t) => [t.id, t]));
-export const DEFAULT_THEME = 'soft-ocean';
+export const DEFAULT_THEME = 'major';
 
 // Kaldırılan/yeniden adlandırılan tema kimlikleri (eski kayıtlar için)
 export const LEGACY_THEME_IDS = { forest: 'forest-mist', ocean: 'soft-ocean' };
