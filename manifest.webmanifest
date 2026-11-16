@@ -1,0 +1,14 @@
+{
+  "name": "Block Fusion",
+  "short_name": "Block Fusion",
+  "description": "Blok bulmaca oyunu – Sonsuz Mod",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1638",
+  "theme_color": "#0b1638",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

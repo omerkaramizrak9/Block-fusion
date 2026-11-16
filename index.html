@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1638">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="Block Fusion – Sonsuz Mod blok bulmaca oyunu">
+  <title>Block Fusion</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="hud">
+      <div class="hud-best" aria-label="En iyi skor">
+        <span class="hud-label">EN İYİ</span>
+        <span id="best-score" class="hud-value">0</span>
+      </div>
+      <div class="hud-score">
+        <span id="score" class="score-value">0</span>
+        <span id="combo" class="combo" aria-live="polite"></span>
+      </div>
+      <button id="restart-btn" class="icon-btn" aria-label="Yeniden başlat" title="Yeniden başlat">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
+      </button>
+    </header>
+
+    <main class="play-area">
+      <div id="board" class="board" role="grid" aria-label="Oyun tahtası">
+        <div id="board-grid" class="board-grid"></div>
+        <div id="fx-layer" class="fx-layer" aria-hidden="true"></div>
+      </div>
+    </main>
+
+    <footer id="tray" class="tray" aria-label="Blok parçaları"></footer>
+  </div>
+
+  <div id="drag-layer" class="drag-layer" aria-hidden="true"></div>
+
+  <div id="gameover" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="go-title">
+    <div class="overlay-card">
+      <h2 id="go-title">Hamle Kalmadı!</h2>
+      <p class="go-label">Skor</p>
+      <p id="go-score" class="go-score">0</p>
+      <p id="go-best" class="go-best">En iyi: 0</p>
+      <p id="go-newbest" class="go-newbest hidden">Yeni rekor!</p>
+      <button id="go-restart" class="primary-btn">Tekrar Oyna</button>
+    </div>
+  </div>
+
+  <div id="confirm" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="overlay-card">
+      <h2>Yeniden başlatılsın mı?</h2>
+      <p class="go-label">Mevcut oyun kaybolacak.</p>
+      <div class="btn-row">
+        <button id="confirm-no" class="secondary-btn">Vazgeç</button>
+        <button id="confirm-yes" class="primary-btn">Başlat</button>
+      </div>
+    </div>
+  </div>
+
+  <noscript>Bu oyun JavaScript gerektirir.</noscript>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
