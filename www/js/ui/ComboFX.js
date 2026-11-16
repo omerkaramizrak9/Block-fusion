@@ -8,7 +8,6 @@
 //
 // Ayarlardan "yoğun görsel efektler" kapalıysa: sarsıntı, dalga ve parçacık YOK,
 // yalnızca sakin bir yazı gösterilir. Titreşim ayrı ayardır.
-import { Platform } from '../platform/Platform.js';
 
 export const COMBO_TIERS = { big: { combo: 3, lines: 3 }, epic: { combo: 5, lines: 4 } };
 
@@ -22,15 +21,15 @@ export function comboTier({ combo, lines, boardClear }) {
 }
 
 export class ComboFX {
-  constructor({ bus, els, settings }) {
+  constructor({ bus, els, settings, feedback }) {
     this.els = els;
     this.settings = settings;
+    this.feedback = feedback;
     bus.on('placed', (e) => this._onPlaced(e));
   }
 
-  get intense() { return this.settings.get('intenseEffects'); }
-
-  _haptic(kind) { if (this.settings.get('vibration')) Platform.haptic(kind); }
+  get intense() { return this.settings.get('effects') && !this.settings.reducedMotion; }
+  get shakeOn() { return this.settings.get('shake') && !this.settings.reducedMotion; }
 
   _onPlaced({ lines, result, row, col, piece }) {
     const lineCount = lines.rows.length + lines.cols.length;
@@ -42,6 +41,7 @@ export class ComboFX {
     const cc = col + (piece.shape.cols - 1) / 2;
 
     if (tier === 'small') {
+      if (!this.intense) return;
       const text = result.combo >= 2 ? `Kombo x${result.combo}` : PRAISE[Math.min(lineCount, 4)];
       if (text) this._floatText(text, cr - 1.2, cc);
       return;
@@ -51,10 +51,10 @@ export class ComboFX {
       : result.combo >= 2 ? `KOMBO x${result.combo}` : PRAISE[Math.min(lineCount, 4)];
     const sub = `+${result.points}`;
     this._banner(title, sub, tier);
-    this._haptic(tier === 'epic' ? 'success' : 'heavy');
+    this.feedback?.clear(tier === 'epic' ? 'epic' : 'combo', { lines: lineCount, combo: result.combo });
 
+    if (this.shakeOn) this._screenShake(tier);
     if (!this.intense) return;
-    this._screenShake(tier);
     this._wave(cr, cc, 0);
     if (tier === 'epic') this._wave(cr, cc, 160);
     this._flashBoard(cr, cc);

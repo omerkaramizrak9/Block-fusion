@@ -1,15 +1,14 @@
 // Arayüz çizimi ve animasyonlar. Oyun mantığını değiştirmez; yalnızca
 // EventBus olaylarını dinler.
 import { CONFIG } from '../config.js';
-import { Platform } from '../platform/Platform.js';
 import { comboTier } from './ComboFX.js';
 
 
 export class Renderer {
-  constructor({ bus, game, els, settings }) {
+  constructor({ bus, game, els, settings, feedback }) {
     this.bus = bus;
     this.settings = settings;
-    Renderer.settings = settings;
+    this.feedback = feedback;
     this.game = game;
     this.els = els;
     this.size = CONFIG.boardSize;
@@ -22,7 +21,7 @@ export class Renderer {
     bus.on('start', () => { this.renderBoard(); this.hideGameOver(); this.displayScore = 0; });
     bus.on('tray', ({ tray, fresh }) => this.renderTray(tray, fresh));
     this.rotatedSlots = new Set();
-    bus.on('rotated', ({ slot }) => { this.rotatedSlots.add(slot); Renderer.haptic('light'); });
+    bus.on('rotated', ({ slot }) => { this.rotatedSlots.add(slot); this.feedback?.play('rotate'); });
     bus.on('rotate-denied', ({ slot, reason }) => { if (reason === 'symmetric') this.wiggleSlot(slot); });
     // Hak sayısı değişince "döndürünce sığar" ipuçları güncellenir
     bus.on('rotations', () => this.renderTray(this.game.tray, false));
@@ -173,10 +172,10 @@ export class Renderer {
       const lineCount = lines.rows.length + lines.cols.length;
       if (comboTier({ combo: result.combo, lines: lineCount, boardClear: result.boardClear }) === 'small') {
         this._floatText(`+${result.points}`, cr, cc);
-        haptic('medium');
-      } // büyük kombolarda puan ve titreşim ComboFX kutlamasında
+        this.feedback?.clear(lineCount >= 3 ? 'line3' : lineCount === 2 ? 'line2' : 'line1', { lines: lineCount, combo: result.combo });
+      } // büyük kombolarda ses/titreşim ComboFX kutlamasında
     } else {
-      haptic('light');
+      this.feedback?.play('place');
     }
   }
 
@@ -254,7 +253,7 @@ export class Renderer {
       this.els.goBest.textContent = `En iyi: ${best}`;
       this.els.goNewBest.classList.toggle('hidden', !isNewBest);
       this.els.gameover.classList.remove('hidden');
-      haptic('heavy');
+      this.feedback?.play('gameover');
     }, 750);
   }
 
@@ -287,7 +286,4 @@ export function buildPieceEl(piece, className, pitch) {
   return el;
 }
 
-function haptic(kind) {
-  if (Renderer.settings?.get('vibration') ?? CONFIG.vibration) Platform.haptic(kind);
-}
-Renderer.haptic = haptic;
+

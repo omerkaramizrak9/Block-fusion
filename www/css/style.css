@@ -506,8 +506,6 @@ body {
 .switch:checked::after { transform: translateX(20px); }
 .switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-.settings-sub { margin: 16px 0 10px; font-size: 16px; }
-.settings-sub small { color: var(--text-dim); font-weight: 600; font-size: 12px; margin-left: 4px; }
 .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .theme-card {
   position: relative;
@@ -638,3 +636,59 @@ body {
   20%, 75% { opacity: 1; transform: translate(-50%, -50%); }
   100% { opacity: 0; transform: translate(-50%, -60%); }
 }
+
+/* ---------- Ayarlar v2: gruplar, segmentli seçim, kaydırıcı ---------- */
+.set-group {
+  margin-top: 12px;
+  padding: 4px 12px 6px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .035);
+}
+.set-head {
+  margin: 10px 0 2px; font-size: 12px; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim);
+}
+.set-head small { text-transform: none; letter-spacing: 0; margin-left: 4px; font-weight: 600; }
+.set-group .setting-row:last-child { border-bottom: 0; }
+.setting-row.disabled, .setting-row.unsupported { opacity: .45; }
+.setting-row.disabled input, .setting-row.disabled .seg,
+.setting-row.unsupported input, .setting-row.unsupported .seg { pointer-events: none; }
+.set-note { margin: 6px 0; font-size: 12.5px; color: var(--text-dim); }
+
+.seg-row { flex-wrap: wrap; }
+.seg {
+  display: inline-flex; flex: none;
+  padding: 3px; gap: 2px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, .22);
+}
+.seg button {
+  min-width: 58px; height: 32px; padding: 0 10px;
+  border: 0; border-radius: 9px;
+  background: transparent; color: var(--text-dim);
+  font: inherit; font-size: 13.5px; font-weight: 800;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.seg button[aria-checked="true"] { background: var(--panel-2); color: var(--text); box-shadow: 0 1px 0 rgba(255,255,255,.06), 0 2px 6px rgba(0,0,0,.25); }
+
+.slider-row { gap: 10px; }
+.slider-row .setting-text { flex: 0 0 auto; min-width: 92px; }
+.slider {
+  -webkit-appearance: none; appearance: none;
+  flex: 1; min-width: 0; height: 28px; margin: 0;
+  background: transparent; cursor: pointer;
+  touch-action: pan-x;
+}
+.slider::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: rgba(255,255,255,.14); }
+.slider::-moz-range-track { height: 6px; border-radius: 3px; background: rgba(255,255,255,.14); }
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 22px; height: 22px; margin-top: -8px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 2px 6px rgba(0,0,0,.35);
+}
+.slider::-moz-range-thumb { width: 22px; height: 22px; border: 0; border-radius: 50%; background: var(--accent); }
+.slider-val { flex: none; width: 44px; text-align: right; font-size: 13px; font-weight: 800; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+.reset-btn { margin-top: 16px; font-size: 15px; padding: 12px; }
+.settings-card .primary-btn { margin-top: 10px; }

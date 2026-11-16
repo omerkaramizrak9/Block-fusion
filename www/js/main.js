@@ -18,6 +18,9 @@ import { Settings, SETTINGS_KEY } from './settings/Settings.js';
 import { ThemeManager, UNLOCKED_KEY } from './theme/ThemeManager.js';
 import { SettingsUI } from './ui/SettingsUI.js';
 import { ComboFX } from './ui/ComboFX.js';
+import { Haptics } from './feedback/Haptics.js';
+import { Feedback } from './feedback/Feedback.js';
+import { AudioEngine } from './audio/AudioEngine.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -74,14 +77,18 @@ async function boot() {
     settings: $('settings'),
     settingsBtn: $('settings-btn'),
     settingsClose: $('settings-close'),
-    setVibration: $('set-vibration'),
-    setEffects: $('set-effects'),
-    vibNote: $('vib-note'),
     themeGrid: $('theme-grid')
   };
 
   const bus = new EventBus();
   const settings = new Settings(bus);
+  settings.applyRootFlags();
+  const audio = new AudioEngine(settings, bus);
+  const haptics = new Haptics(settings);
+  const feedback = new Feedback({ haptics, audio });
+  // Ses yalnızca kullanıcı dokunuşundan sonra başlatılabilir (iOS/Android kuralı)
+  const unlockAudio = () => audio.unlock();
+  ['pointerdown', 'touchend', 'keydown'].forEach((t) => window.addEventListener(t, unlockAudio, { passive: true }));
   const entitlements = new Entitlements();
   const themes = new ThemeManager({ bus, entitlements });
   const layout = new Layout(els.app);
@@ -93,8 +100,8 @@ async function boot() {
   themes.checkProgress({ best: game.score.best });
   applyModeTheme();
 
-  const renderer = new Renderer({ bus, game, els, settings });
-  new ComboFX({ bus, els, settings });
+  const renderer = new Renderer({ bus, game, els, settings, feedback });
+  new ComboFX({ bus, els, settings, feedback });
 
   // Reklam altyapısı: başlatma hatası oyunu etkilemez (reklamsız devam edilir)
   const ads = new AdService({ provider: createAdProvider(Platform), bus });
@@ -108,8 +115,18 @@ async function boot() {
 
   const settingsUI = new SettingsUI({
     settings, themes, bus, els,
-    onThemeChosen: () => applyModeTheme()
+    audioAvailable: audio.available,
+    toast: (t) => rotationUI.toast(t),
+    onThemeChosen: () => { applyModeTheme(); feedback.play('ui'); },
+    // Ayarı değiştirirken anında deneme: ses seviyesi / titreşim gücü hissedilsin
+    onFeedback: (key) => {
+      if (key === 'sfx' || key === 'sfxVolume') audio.play('rotate');
+      else if (key === 'haptics' || key === 'hapticStrength') haptics.play('line2');
+      else audio.play('ui');
+    }
   });
+  bus.on('rotate-denied', () => feedback.play('deny'));
+  bus.on('rotations', ({ delta, source }) => { if (delta > 0 && source === 'ad') feedback.play('reward'); });
 
   // Skor ilerledikçe tema kilitleri açılır
   bus.on('score', ({ best }) => themes.checkProgress({ best }));
@@ -140,7 +157,7 @@ async function boot() {
   Platform.hideSplash();
 
   // Hata ayıklama/test için konsoldan erişim
-  window.blockFusion = { game, bus, Platform, ads, rotationUI, settings, themes, entitlements };
+  window.blockFusion = { game, bus, Platform, ads, rotationUI, settings, themes, entitlements, audio, haptics, feedback };
 }
 
 boot();

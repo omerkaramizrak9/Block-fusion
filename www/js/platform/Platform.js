@@ -18,24 +18,11 @@ function detectOS() {
   return 'web';
 }
 
-const HAPTIC_WEB = { light: 8, medium: 18, heavy: [30, 60, 30], success: [15, 40, 25] };
-const HAPTIC_STYLE = { light: 'LIGHT', medium: 'MEDIUM', heavy: 'HEAVY' };
-
 export const Platform = {
   isNative: !!Cap?.isNativePlatform?.(),
   os: detectOS(),
 
-  /** Dokunsal geri bildirim. iOS Safari'de (web) titreşim API'si yoktur; sessizce geçilir. */
-  haptic(kind = 'light') {
-    try {
-      if (this.isNative && plugins.Haptics) {
-        if (kind === 'success') plugins.Haptics.notification({ type: 'SUCCESS' });
-        else plugins.Haptics.impact({ style: HAPTIC_STYLE[kind] || 'LIGHT' });
-        return;
-      }
-      navigator.vibrate?.(HAPTIC_WEB[kind] ?? 10);
-    } catch { /* desteklenmiyor */ }
-  },
+  // Dokunsal geri bildirim: feedback/Haptics.js (Capacitor Haptics / navigator.vibrate)
 
   /** Kalıcı depolama (yerelde Preferences, web'de localStorage). */
   prefs: {
@@ -79,6 +66,9 @@ export const Platform = {
       }
     } catch { /* yok say */ }
   },
+
+  /** Yerel Capacitor eklentisi (yoksa undefined). */
+  plugin(name) { return this.isNative ? plugins[name] : undefined; },
 
   /** Titreşim/dokunsal geri bildirim bu cihazda var mı? (iOS Safari web: yok) */
   get canVibrate() {

@@ -100,16 +100,80 @@
   <div id="settings" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
     <div class="overlay-card settings-card">
       <h2 id="settings-title">Ayarlar</h2>
-      <label class="setting-row">
-        <span class="setting-text"><b>Titreşim</b><small id="vib-note">Dokunsal geri bildirim</small></span>
-        <input type="checkbox" id="set-vibration" class="switch">
-      </label>
-      <label class="setting-row">
-        <span class="setting-text"><b>Yoğun görsel efektler</b><small>Ekran sarsıntısı, renk dalgaları, parçacıklar</small></span>
-        <input type="checkbox" id="set-effects" class="switch">
-      </label>
-      <h3 class="settings-sub">Tema <small>Sonsuz Mod</small></h3>
-      <div id="theme-grid" class="theme-grid" role="radiogroup" aria-label="Tema seçimi"></div>
+
+      <section class="set-group" aria-labelledby="sg-sound">
+        <h3 id="sg-sound" class="set-head">Ses</h3>
+        <label class="setting-row">
+          <span class="setting-text"><b>Ses efektleri</b></span>
+          <input type="checkbox" class="switch" data-setting="sfx">
+        </label>
+        <div class="setting-row slider-row" data-depends="sfx">
+          <span class="setting-text"><small>Efekt ses seviyesi</small></span>
+          <input type="range" class="slider" min="0" max="100" step="5" data-setting="sfxVolume" aria-label="Efekt ses seviyesi">
+          <output class="slider-val" data-for="sfxVolume"></output>
+        </div>
+        <label class="setting-row">
+          <span class="setting-text"><b>Arka plan müziği</b></span>
+          <input type="checkbox" class="switch" data-setting="music">
+        </label>
+        <div class="setting-row slider-row" data-depends="music">
+          <span class="setting-text"><small>Müzik ses seviyesi</small></span>
+          <input type="range" class="slider" min="0" max="100" step="5" data-setting="musicVolume" aria-label="Müzik ses seviyesi">
+          <output class="slider-val" data-for="musicVolume"></output>
+        </div>
+        <p id="audio-note" class="set-note hidden">Bu tarayıcıda ses desteklenmiyor.</p>
+      </section>
+
+      <section class="set-group" aria-labelledby="sg-haptic">
+        <h3 id="sg-haptic" class="set-head">Titreşim</h3>
+        <label class="setting-row" data-requires="vibrate">
+          <span class="setting-text"><b>Telefon titreşimi</b><small id="vib-note">Dokunsal geri bildirim</small></span>
+          <input type="checkbox" class="switch" data-setting="haptics">
+        </label>
+        <div class="setting-row seg-row" data-depends="haptics" data-requires="vibrate">
+          <span class="setting-text"><small>Titreşim yoğunluğu</small></span>
+          <div class="seg" role="radiogroup" aria-label="Titreşim yoğunluğu" data-setting="hapticStrength">
+            <button type="button" data-v="light">Hafif</button>
+            <button type="button" data-v="normal">Normal</button>
+            <button type="button" data-v="strong">Güçlü</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="set-group" aria-labelledby="sg-motion">
+        <h3 id="sg-motion" class="set-head">Hareket ve efektler</h3>
+        <label class="setting-row" data-depends-motion>
+          <span class="setting-text"><b>Ekran sarsıntısı</b><small>Yalnızca oyun alanı sarsılır</small></span>
+          <input type="checkbox" class="switch" data-setting="shake">
+        </label>
+        <label class="setting-row" data-depends-motion>
+          <span class="setting-text"><b>Özel animasyonlar ve parçacıklar</b><small>Kombo kutlamaları, ışık dalgaları</small></span>
+          <input type="checkbox" class="switch" data-setting="effects">
+        </label>
+        <div class="setting-row seg-row" data-depends-motion>
+          <span class="setting-text"><small>Animasyon yoğunluğu</small></span>
+          <div class="seg" role="radiogroup" aria-label="Animasyon yoğunluğu" data-setting="animIntensity">
+            <button type="button" data-v="light">Hafif</button>
+            <button type="button" data-v="normal">Normal</button>
+            <button type="button" data-v="strong">Güçlü</button>
+          </div>
+        </div>
+        <div class="setting-row seg-row">
+          <span class="setting-text"><b>Azaltılmış hareket</b><small id="rm-note">Sistem: kapalı</small></span>
+          <div class="seg" role="radiogroup" aria-label="Azaltılmış hareket" data-setting="reducedMotion">
+            <button type="button" data-v="auto">Sistem</button>
+            <button type="button" data-v="on">Açık</button>
+            <button type="button" data-v="off">Kapalı</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="set-group" aria-labelledby="sg-theme">
+        <h3 id="sg-theme" class="set-head">Tema <small>Sonsuz Mod</small></h3>
+        <div id="theme-grid" class="theme-grid" role="radiogroup" aria-label="Tema seçimi"></div>
+      </section>
+
+      <button id="settings-reset" class="secondary-btn reset-btn">Varsayılan ayarlara dön</button>
       <button id="settings-close" class="primary-btn">Tamam</button>
     </div>
   </div>
