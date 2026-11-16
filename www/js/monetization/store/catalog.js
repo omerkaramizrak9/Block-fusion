@@ -1,52 +1,40 @@
-// Mağaza ürün kataloğu (PLAN). Fiyatlar burada değil, mağazalarda (Google Play
-// Console / App Store Connect) belirlenir ve çalışma anında oradan okunur.
+// Mağaza ürün kataloğu (PLAN – henüz satışta değil, arayüze bağlı değil).
+// Fiyatlar burada değil, mağazalarda (Google Play Console / App Store Connect)
+// belirlenir ve çalışma anında oradan okunur.
+//
+// Karar: Başlangıç sürümünde "reklam kaldırma" ürünü YOK (zorunlu reklam da yok).
+// Satış odağı: kozmetik içerik (temalar, kozmetik paketler).
 //
 // type:
 //   'non_consumable'  bir kez alınır, kalıcıdır (geri yüklenebilir)
 //   'consumable'      tükenir, tekrar alınabilir
-//   'subscription'    abonelik
 //
-// grants: satın alma sonrası verilecek haklar
-//   { entitlement: 'id' }          kalıcı kilit açma
-//   { inventory: { item: miktar } } tüketilebilir envanter
+// grants:
+//   { entitlement: 'id' | ['id', ...] }   kalıcı kilit açma
+//     'theme:<temaId>'      → www/js/theme/themes.js içindeki tema
+//     'cosmetic:<id>'       → gelecekteki kozmetikler (blok stili, efekt paketi)
 
 export const PRODUCTS = [
-  {
-    id: 'remove_ads',
-    type: 'non_consumable',
-    title: 'Reklamları Kaldır',
-    grants: { entitlement: 'no_ads' },
-    note: 'Zorunlu reklamları kaldırır. Ödüllü reklamlar isteğe bağlı kalır.'
-  },
+  // --- Tekil temalar (themes.js'te unlock: { type: 'product', productId } olanlar)
   {
     id: 'theme_neon',
     type: 'non_consumable',
-    title: 'Neon Tema',
+    title: 'Neon Gece Teması',
     grants: { entitlement: 'theme:neon' }
   },
   {
-    id: 'theme_ocean',
+    id: 'theme_sakura',
     type: 'non_consumable',
-    title: 'Okyanus Teması',
-    grants: { entitlement: 'theme:ocean' }
+    title: 'Sakura Teması',
+    grants: { entitlement: 'theme:sakura' }
   },
+  // --- Kozmetik paketler (birden fazla öğe)
   {
-    id: 'rotations_25',
-    type: 'consumable',
-    title: '25 Döndürme Hakkı',
-    grants: { inventory: { rotations: 25 } }
-  },
-  {
-    id: 'powerpack_small',
-    type: 'consumable',
-    title: 'Küçük Güç Paketi',
-    grants: { inventory: { bomb: 3, lightning: 2, rainbow: 1 } }
-  },
-  {
-    id: 'premium',
+    id: 'pack_cosmetic_1',
     type: 'non_consumable',
-    title: 'Block Fusion Premium',
-    grants: { entitlement: ['no_ads', 'theme:neon', 'theme:ocean', 'adventure:all'] }
+    title: 'Kozmetik Paket 1',
+    grants: { entitlement: ['theme:neon', 'theme:sakura', 'cosmetic:blockstyle_gem'] },
+    note: 'Paket içeriği yayından önce netleştirilecek.'
   }
 ];
 

@@ -47,9 +47,14 @@ export class RotationUI {
     this.game.rotatePiece(slot);
   }
 
-  get canOfferAd() {
+  /** Bu oyunda kalan ödüllü reklam sayısı (sınırsızsa Infinity). */
+  get adsLeft() {
     const max = CONFIG.rewards.maxAdsPerGame;
-    return this.ads.enabled && (!max || this.game.adsWatched < max);
+    return max ? Math.max(0, max - this.game.adsWatched) : Infinity;
+  }
+
+  get canOfferAd() {
+    return this.ads.enabled && this.adsLeft > 0;
   }
 
   get isOpen() { return this.mode !== null; }
@@ -72,6 +77,9 @@ export class RotationUI {
       rewardTitle.textContent = 'Döndürme hakkın bitti';
       rewardText.innerHTML = `Kısa bir reklam izleyerek <b>${this.amount} döndürme hakkı</b> kazanabilirsin. İzlemezsen oyun normal devam eder.`;
       rewardSkip.textContent = 'Hayır, teşekkürler';
+    }
+    if (Number.isFinite(this.adsLeft)) {
+      rewardText.innerHTML += `<br><small class="ads-left">Bu oyunda kalan reklam: ${this.adsLeft}/${CONFIG.rewards.maxAdsPerGame}</small>`;
     }
     rewardWatch.textContent = `▶ Reklam İzle (+${this.amount})`;
     this._setError(null);

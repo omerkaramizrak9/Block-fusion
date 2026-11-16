@@ -438,3 +438,4 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
 }
+.ads-left { display: inline-block; margin-top: 6px; color: var(--text-dim); font-size: 13px; font-weight: 700; }

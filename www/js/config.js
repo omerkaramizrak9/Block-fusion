@@ -33,10 +33,11 @@ export const CONFIG = {
   // Ödüllü reklam ödülleri
   rewards: {
     rotationAdAmount: 5,   // reklam başına kazanılan döndürme hakkı
-    maxAdsPerGame: 0       // 0 = sınırsız
+    maxAdsPerGame: 3       // bir oyunda en fazla ödüllü reklam (0 = sınırsız)
   },
 
-  // Reklam altyapısı. provider: 'simulated' (test) | 'admob' (sonraki aşama)
+  // Reklam altyapısı. YALNIZCA isteğe bağlı ödüllü reklam; zorunlu (geçiş/banner)
+  // reklam yoktur. provider: 'simulated' (test) | 'admob' (yayın öncesi aşama)
   ads: {
     provider: 'simulated',
     loadTimeoutMs: 8000,
