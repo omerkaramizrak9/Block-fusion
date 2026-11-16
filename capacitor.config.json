@@ -1,0 +1,28 @@
+{
+  "appId": "com.blockfusion.game",
+  "appName": "Block Fusion",
+  "webDir": "www",
+  "backgroundColor": "#0b1638",
+  "android": {
+    "backgroundColor": "#0b1638",
+    "allowMixedContent": false
+  },
+  "ios": {
+    "backgroundColor": "#0b1638",
+    "contentInset": "never",
+    "scrollEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": false,
+      "backgroundColor": "#0b1638",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0b1638",
+      "overlaysWebView": true
+    }
+  }
+}
